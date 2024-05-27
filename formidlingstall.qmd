@@ -1,0 +1,131 @@
+---
+title: "Formidlingstall"
+title-block-banner: true
+title-block-banner-color: white
+date: now
+date-format: "DD.MM.YYYY HH:mm:ss z"
+published-title: "Oppdatert"
+author: Team Toi
+author-title: "Eier"
+execute:
+    echo: false
+    warning: false
+format:
+    html:
+        page-layout: full
+        embed-resources: true
+jupyter: python3
+---
+
+<span style="color:red;">
+NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
+</span>
+
+```{python}
+from google.cloud.bigquery import Client
+import pandas as pd
+```
+
+```{python}
+project = "toi-prod-324e"
+bq_client = Client(project)
+```
+
+```{python}
+query = f"""
+    select
+        FORMAT_DATETIME('%Y-%m', u.tidspunkt) as tidspunkt_utfall_yearmonth,
+        vk.stillingskategori,
+        count(*) as antall
+    from `kandidat_api.utfallsendring` u
+        inner join `kandidat_api.veilkandidat` v on u.veilkandidat_db_id = v.db_id
+        inner join `kandidat_api.veilkandliste` vk on v.veilkandliste_db_id = vk.db_id
+    where u.nytt_utfall = 'FATT_JOBBEN'
+    group by tidspunkt_utfall_yearmonth, vk.stillingskategori
+    order by tidspunkt_utfall_yearmonth
+    """
+df_synlige = bq_client.query(query=query).to_dataframe()
+```
+
+```{python}
+query = f"""
+    select
+        FORMAT_DATETIME('%Y-%m', DATE(TIMESTAMP_MILLIS(CAST(lagt_til_tidspunkt/1000000 AS INT64)))) as tidspunkt_utfall_yearmonth,
+        vk.stillingskategori,
+        count(*) as antall
+    from `kandidat_api.formidlingavusynligkandidat` fk
+        inner join `kandidat_api.veilkandliste` vk on fk.veilkandliste_db_id = vk.db_id
+    where fk.utfall = 'FATT_JOBBEN'
+    group by tidspunkt_utfall_yearmonth, vk.stillingskategori
+    order by tidspunkt_utfall_yearmonth
+ """
+df_usynlige = bq_client.query(query=query).to_dataframe()
+```
+
+```{python}
+df_synlige["synlige_kandidater"] = True
+df_usynlige["synlige_kandidater"] = False
+```
+
+```{python}
+df = pd.concat([df_synlige, df_usynlige], ignore_index=True)
+df = df.sort_values("tidspunkt_utfall_yearmonth")
+```
+
+```{python}
+# Erstatt None med "tomt"
+df.fillna('tomt', inplace=True)
+```
+
+```{python}
+import plotly.graph_objects as go
+
+fig = go.Figure()
+for stillingskategori in df.stillingskategori.unique():
+    fig.add_trace(
+        go.Scatter(
+            x=df[df.stillingskategori == stillingskategori].tidspunkt_utfall_yearmonth.unique(),
+            y=df[df.stillingskategori == stillingskategori].groupby("tidspunkt_utfall_yearmonth").antall.sum(),
+            name=stillingskategori,
+            mode='lines+markers',
+            line=dict(width=2),
+            marker=dict(size=4),
+        )
+    )
+fig.update_layout(
+    title_text="Antall fått jobben per måned",
+    xaxis_title="Måned",
+    yaxis_title="Antall"
+)
+
+fig.show()
+```
+
+```{python}
+antall_stillinger = df[df.stillingskategori == 'STILLING'].groupby('tidspunkt_utfall_yearmonth').antall.sum()
+totalt_antall = df.groupby('tidspunkt_utfall_yearmonth').antall.sum()
+
+andel_stilling = antall_stillinger / totalt_antall
+andel_stilling = andel_stilling.reset_index()
+```
+
+```{python}
+fig = go.Figure()
+fig.add_trace(
+    go.Scatter(
+        x=andel_stilling.tidspunkt_utfall_yearmonth,
+        y=andel_stilling.antall,
+        name='Andel stilling',
+        mode='lines+markers',
+        line=dict(width=2),
+        marker=dict(size=4),
+    )
+)
+fig.update_layout(
+    title_text="Andel stilling (STILLING / TOTALT)",
+    xaxis_title="Måned",
+    yaxis_title="Andel"
+)
+fig.update_yaxes(range=[0, 0.5])
+fig.show()
+```
