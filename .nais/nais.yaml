@@ -1,0 +1,34 @@
+apiVersion: nais.io/v1
+kind: Naisjob
+metadata:
+  annotations:
+    nais.io/read-only-file-system: "false"
+  labels:
+    team: toi
+  name: rekrutteringsbistand-datafortelling
+  namespace: toi
+spec:
+  image: {{ image }}
+  resources:
+    limits:
+      memory: 8Gi
+    requests:
+      memory: 1Gi
+  ttlSecondsAfterFinished: 340
+  schedule: "0 5-13 * * *"
+  backoffLimit: 2
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{ nada_host }}
+  gcp:
+    bigQueryDatasets:
+      - name: kandidat_api
+        permission: READ
+  envFrom:
+    - secret: rekrutteringsbistand-nada-secret # value is the secret name in Google Secret Manager
+  env:
+    - name: NADA_HOST
+      value: {{ nada_host }}
+    - name: QUARTO_ID
+      value: {{ quarto_id }}
