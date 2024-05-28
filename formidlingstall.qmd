@@ -73,8 +73,8 @@ df = df.sort_values("tidspunkt_utfall_yearmonth")
 ```
 
 ```{python}
-# Erstatt None med "tomt"
-df.fillna('tomt', inplace=True)
+# Erstatt None med "Uten kategori"
+df.fillna('Uten kategori', inplace=True)
 ```
 
 ```{python}
@@ -96,6 +96,11 @@ fig.update_layout(
     title_text="Antall fått jobben per måned",
     xaxis_title="Måned",
     yaxis_title="Antall"
+)
+
+# Legg til x-slider
+fig.update_layout(
+    xaxis=dict(autorange=True, rangeslider=dict(autorange=True, visible=True)),
 )
 
 fig.show()
@@ -127,5 +132,11 @@ fig.update_layout(
     yaxis_title="Andel"
 )
 fig.update_yaxes(range=[0, 0.5])
+
+# Legg til x-slider
+fig.update_layout(
+    xaxis=dict(autorange=True, rangeslider=dict(autorange=True, visible=True)),
+)
+
 fig.show()
 ```
