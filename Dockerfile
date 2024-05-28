@@ -1,9 +1,7 @@
 FROM python:3.11-slim
 
-# Create a virtual environment in which we install the Python packages described in the requirements file
-RUN python3 -m pip install --upgrade pip && \
-    python3 -m venv .venv && \
-    . .venv/bin/activate
+# Install the Python packages described in the requirements file
+RUN python3 -m pip install --upgrade pip
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
