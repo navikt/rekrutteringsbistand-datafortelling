@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    permissions:
+      packages: write
+      id-token: write
+    name: Build and push Docker container
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and push docker image
+        uses: nais/docker-build-push@v0
+        id: docker-push
+        with:
+          team: pia
+          tag: ${{ github.ref == 'refs/heads/main' && 'latest' || 'branch_latest' }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+    outputs:
+      image: ${{ steps.docker-push.outputs.image }}
+
+  deploy:
+    permissions:
+      id-token: write
+    strategy:
+      matrix:
+        cluster: prod
+    name: Deploy naisjob
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          IMAGE: ${{ needs.build.outputs.image }}
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais.yaml
+          VARS: .nais/vars.yaml
