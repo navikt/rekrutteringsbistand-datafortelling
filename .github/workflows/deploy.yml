@@ -26,9 +26,6 @@ jobs:
   deploy:
     permissions:
       id-token: write
-    strategy:
-      matrix:
-        cluster: prod
     name: Deploy naisjob
     needs: build
     if: github.ref == 'refs/heads/main'
