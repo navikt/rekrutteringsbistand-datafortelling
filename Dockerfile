@@ -45,4 +45,6 @@ ENV XDG_CACHE_HOME=/quarto/cache
 ENV XDG_DATA_HOME=/quarto/share
 
 USER 1069
+
+RUN chmod +x run.sh
 ENTRYPOINT ["./run.sh"]
