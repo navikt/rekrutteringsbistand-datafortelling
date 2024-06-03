@@ -36,9 +36,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN python3 -m venv /opt/venv
 
 COPY run.sh .
-COPY includes/ includes/
 COPY *.qmd .
-COPY *.py .
 
 RUN chown python:python /quarto -R
 
