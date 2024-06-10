@@ -24,3 +24,12 @@ Logg inn i GCP med `gcloud auth application-default login`.
 
 Kjør quarto lokalt for å generere en datafortelling: `quarto render <datafortellingsnavn>.qmd`.
 
+# Ad hoc kjøring
+
+For å regenerere datafortellingen manuelt, gjør følgende:
+
+- Logg inn i gcp med `gcloud auth login --update-adc`
+- Gå til cluster prod-gcp i kubectl `kubectx prod-gcp`
+- Sett namespace til pia `kubens toi`
+- Finn cronjobben for datafortellingen ( `kubectl get cronjobs | grep rekrutteringsbistand-datafortelling` )
+- Kjør jobben manuelt ( `kubectl create job --from=cronjob/rekrutteringsbistand-datafortelling rekrutteringsbistand-datafortelling-ad-hoc` )
