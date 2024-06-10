@@ -1,0 +1,18 @@
+---
+title: "Rekrutteringsbistand - oversikt"
+title-block-banner: true
+title-block-banner-color: white
+date: now
+date-format: "DD.MM.YYYY HH:mm:ss z"
+published-title: "Oppdatert"
+author: Team Toi
+author-title: "Eier"
+execute:
+    echo: false
+    warning: false
+format:
+    html:
+        page-layout: full
+        embed-resources: true
+jupyter: python3
+---

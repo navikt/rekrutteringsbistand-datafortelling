@@ -32,3 +32,5 @@ spec:
       value: {{ nada_host }}
     - name: QUARTO_ID
       value: {{ quarto_id }}
+    - name: QUARTO_ID_OVERSIKT
+      value: {{ quarto_id_oversikt }}
