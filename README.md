@@ -33,3 +33,14 @@ For å regenerere datafortellingen manuelt, gjør følgende:
 - Sett namespace til toi `kubens toi`
 - Finn cronjobben for datafortellingen ( `kubectl get cronjobs | grep rekrutteringsbistand-datafortelling` )
 - Kjør jobben manuelt ( `kubectl create job --from=cronjob/rekrutteringsbistand-datafortelling rekrutteringsbistand-datafortelling-ad-hoc` )
+
+# Legge til ny datafortelling
+
+For å legge til en ny datafortelling:
+
+- Lag en ny fil med filendelsen `.qmd` (den kan være tom, kun med en overskrift for eksempel).
+- Kjør `quarto render <datafortellingsnavn>.qmd` som genererer en html-fil.
+- Opprett en ny datafortelling i [Datamarkedsplassen](data.ansatt.nav.no) med html-en generert fra forrige steg.
+- Oppdater *run.sh* med kjøring og oppdatering av datafortellingen.
+- Oppdater *vars.yaml* med id-en til datafortellingen, som du kan kopiere fra url-en til datafortellingen.
+- Legg til variabelen i *nais.yaml* under `env`.
