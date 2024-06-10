@@ -4,9 +4,9 @@
 
 ### Pre requisites
 
-Installer [python3.11](https://www.python.org/downloads/).
+Installer [python3.12](https://www.python.org/downloads/).
 
-Opprett et virtuelt pythonmiljø i root til prosjektet: `python3.11 -m venv .venv`.
+Opprett et virtuelt pythonmiljø i root til prosjektet: `python3.12 -m venv .venv`.
 
 Aktiver det virtuelle miljøet: `source .venv/bin/activate`.
 
@@ -30,6 +30,6 @@ For å regenerere datafortellingen manuelt, gjør følgende:
 
 - Logg inn i gcp med `gcloud auth login --update-adc`
 - Gå til cluster prod-gcp i kubectl `kubectx prod-gcp`
-- Sett namespace til pia `kubens toi`
+- Sett namespace til toi `kubens toi`
 - Finn cronjobben for datafortellingen ( `kubectl get cronjobs | grep rekrutteringsbistand-datafortelling` )
 - Kjør jobben manuelt ( `kubectl create job --from=cronjob/rekrutteringsbistand-datafortelling rekrutteringsbistand-datafortelling-ad-hoc` )
