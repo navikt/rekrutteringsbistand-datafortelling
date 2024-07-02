@@ -161,3 +161,6 @@ cython_debug/
 
 # Quarto outputs
 *.html
+
+# MacOS
+.DS_Store
