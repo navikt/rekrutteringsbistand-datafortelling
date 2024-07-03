@@ -28,7 +28,7 @@ spec:
       - name: rekrutteringsbistand_statistikk
         permission: READ
   envFrom:
-    - secret: rekrutteringsbistand-nada-secret # value is the secret name in Google Secret Manager
+    - secret: rekrutteringsbistand-nada-secret # secret i nais-console
   env:
     - name: NADA_HOST
       value: {{ nada_host }}
