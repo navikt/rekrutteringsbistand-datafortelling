@@ -15,3 +15,5 @@ jupyter: python3
 ---
 
 {{< include key_results.qmd >}}
+
+{{< include formidlingstall.qmd >}}

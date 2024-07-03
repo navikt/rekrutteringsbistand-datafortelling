@@ -1,0 +1,188 @@
+# Formidlingstall
+
+<span style="color:red;">
+NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
+</span>
+
+```{python}
+from google.cloud.bigquery import Client
+import pandas as pd
+import plotly.graph_objects as go
+```
+
+```{python}
+project = "toi-prod-324e"
+bq_client = Client(project)
+```
+
+```{python}
+query = f"""
+    select
+        FORMAT_DATETIME('%Y-%m', u.tidspunkt) as tidspunkt_utfall_yearmonth,
+        vk.stillingskategori,
+        count(*) as antall
+    from `rekrutteringsbistand_kandidat.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat.veilkandidat` v on u.veilkandidat_db_id = v.db_id
+        inner join `rekrutteringsbistand_kandidat.veilkandliste` vk on v.veilkandliste_db_id = vk.db_id
+    where u.nytt_utfall = 'FATT_JOBBEN'
+    group by tidspunkt_utfall_yearmonth, vk.stillingskategori
+    order by tidspunkt_utfall_yearmonth
+    """
+df_synlige = bq_client.query(query=query).to_dataframe()
+```
+
+```{python}
+query = f"""
+    select
+        FORMAT_DATETIME('%Y-%m', DATE(TIMESTAMP_MILLIS(CAST(lagt_til_tidspunkt/1000000 AS INT64)))) as tidspunkt_utfall_yearmonth,
+        vk.stillingskategori,
+        count(*) as antall
+    from `rekrutteringsbistand_kandidat.formidlingavusynligkandidat` fk
+        inner join `rekrutteringsbistand_kandidat.veilkandliste` vk on fk.veilkandliste_db_id = vk.db_id
+    where fk.utfall = 'FATT_JOBBEN'
+    group by tidspunkt_utfall_yearmonth, vk.stillingskategori
+    order by tidspunkt_utfall_yearmonth
+ """
+df_usynlige = bq_client.query(query=query).to_dataframe()
+```
+
+```{python}
+df_synlige["synlige_kandidater"] = True
+df_usynlige["synlige_kandidater"] = False
+```
+
+```{python}
+df = pd.concat([df_synlige, df_usynlige], ignore_index=True)
+df = df.sort_values("tidspunkt_utfall_yearmonth")
+```
+
+```{python}
+# Erstatt None med "Uten kategori"
+df.fillna("Uten kategori", inplace=True)
+```
+
+```{python}
+def plot_antall_faatt_jobb(df, kolonne, kolonne_navn):
+    fig = go.Figure()
+    for stillingskategori in df.stillingskategori.unique():
+        fig.add_trace(
+            go.Scatter(
+                x=df.loc[df.stillingskategori == stillingskategori, kolonne].unique(),
+                y=df[df.stillingskategori == stillingskategori]
+                .groupby(kolonne)
+                .antall.sum(),
+                name=stillingskategori,
+                mode="lines+markers",
+                line=dict(width=2),
+                marker=dict(size=4),
+            )
+        )
+    fig.update_layout(
+        #title_text="Antall fått jobben per " + kolonne_navn.lower(),
+        xaxis_title=kolonne_navn,
+        yaxis_title="Antall kandidater",
+    )
+
+    # Legg til x-slider
+    #fig.update_layout(
+    #    xaxis=dict(autorange=True, rangeslider=dict(autorange=True, visible=True)),
+    #)
+
+    return fig
+```
+
+```{python}
+def plot_andel_stilling(df, kolonne, kolonne_navn):
+    antall_stillinger = (
+        df[df.stillingskategori == "STILLING"].groupby(kolonne).antall.sum()
+    )
+    totalt_antall = df.groupby(kolonne).antall.sum()
+
+    andel_stilling = antall_stillinger / totalt_antall
+    andel_stilling = andel_stilling.reset_index()
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=andel_stilling[kolonne],
+            y=andel_stilling.antall,
+            name="Andel stilling",
+            mode="lines+markers",
+            line=dict(width=2),
+            marker=dict(size=4),
+        )
+    )
+    fig.update_layout(
+        #title_text="Andel stilling (STILLING / TOTALT) per " + kolonne_navn.lower(),
+        xaxis_title=kolonne_navn,
+        yaxis_title="Andel",
+    )
+    fig.update_yaxes(range=[0, 1])
+
+    # Legg til x-slider
+    #fig.update_layout(
+    #    xaxis=dict(autorange=True, rangeslider=dict(autorange=True, visible=True)),
+    #)
+
+    return fig
+```
+
+```{python}
+# Transformere måned til tertial
+def yearmonth_to_tertial(yearmonth):
+    year, month = yearmonth.split("-")
+    month = int(month)
+    if month <= 4:
+        return f"{year}-T1"
+    elif month <= 8:
+        return f"{year}-T2"
+    else:
+        return f"{year}-T3"
+
+df["tidspunkt_utfall_tertial"] = df["tidspunkt_utfall_yearmonth"].apply(
+    yearmonth_to_tertial
+)
+
+df["tidspunkt_utfall_aar"] = df["tidspunkt_utfall_yearmonth"].str[:4]
+```
+
+## Row
+
+```{python}
+#| title: Antall fått jobben per måned
+fig = plot_antall_faatt_jobb(df, "tidspunkt_utfall_yearmonth", "Måned")
+fig.show()
+```
+
+```{python}
+#| title: Antall fått jobben per tertial
+fig = plot_antall_faatt_jobb(df, "tidspunkt_utfall_tertial", "Tertial")
+fig.show()
+```
+
+```{python}
+#| title: Antall fått jobben per år
+fig = plot_antall_faatt_jobb(df, "tidspunkt_utfall_aar", "År")
+fig.show()
+```
+
+## Row
+
+```{python}
+#| title: Andel stilling (STILLING / TOTALT) per måned
+fig = plot_andel_stilling(df, "tidspunkt_utfall_yearmonth", "Måned")
+fig.show()
+```
+
+```{python}
+#| title: Andel stilling (STILLING / TOTALT) per tertial
+fig = plot_andel_stilling(df, "tidspunkt_utfall_tertial", "Tertial")
+fig.show()
+```
+
+```{python}
+#| title: Andel stilling (STILLING / TOTALT) per år
+fig = plot_andel_stilling(df, "tidspunkt_utfall_aar", "År")
+fig.show()
+```
+
