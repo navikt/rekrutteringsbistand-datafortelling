@@ -1,0 +1,17 @@
+---
+title: Rekrutteringsbistand
+execute:
+  echo: false
+  warning: false
+format:
+  dashboard:
+    embed-resources: true
+    nav-buttons:
+      - icon: github
+        href: 'https://github.com/navikt/rekrutteringsbistand-datafortelling/'
+      - icon: slack
+        href: 'https://nav-it.slack.com/archives/C02HTU8DBSR'
+jupyter: python3
+---
+
+{{< include key_results.qmd >}}

@@ -1,0 +1,38 @@
+```{python}
+# Lese inn data
+
+#...
+```
+
+# Key results
+
+## Row
+
+```{python}
+#| component: valuebox
+#| title: Minst én i prioritert målgruppe fikk vist sin kontatktinfo
+dict(
+    icon = "eye",
+    color = "primary",
+    value = 1
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: Kandidater i prioritert målgruppe som fikk jobben
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = 1
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: Direktemeldte stillinger med minst én presentert kandidat
+dict(
+    icon = "card-checklist",
+    value = 1
+)
+```
