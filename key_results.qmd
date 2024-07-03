@@ -1,10 +1,14 @@
+# Key results
+
+<span style="color:red;">
+NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
+</span>
+
 ```{python}
 # Lese inn data
 
 #...
 ```
-
-# Key results
 
 ## Row
 
