@@ -25,6 +25,7 @@ query = f"""
         inner join `rekrutteringsbistand_kandidat.veilkandidat` v on u.veilkandidat_db_id = v.db_id
         inner join `rekrutteringsbistand_kandidat.veilkandliste` vk on v.veilkandliste_db_id = vk.db_id
     where u.nytt_utfall = 'FATT_JOBBEN'
+        and vk.stillingskategori IN ('STILLING', 'FORMIDLING')
     group by tidspunkt_utfall_yearmonth, vk.stillingskategori
     order by tidspunkt_utfall_yearmonth
     """
@@ -40,6 +41,7 @@ query = f"""
     from `rekrutteringsbistand_kandidat.formidlingavusynligkandidat` fk
         inner join `rekrutteringsbistand_kandidat.veilkandliste` vk on fk.veilkandliste_db_id = vk.db_id
     where fk.utfall = 'FATT_JOBBEN'
+        and vk.stillingskategori IN ('STILLING', 'FORMIDLING')
     group by tidspunkt_utfall_yearmonth, vk.stillingskategori
     order by tidspunkt_utfall_yearmonth
  """
@@ -57,8 +59,7 @@ df = df.sort_values("tidspunkt_utfall_yearmonth")
 ```
 
 ```{python}
-# Erstatt None med "Uten kategori"
-df.fillna("Uten kategori", inplace=True)
+df.stillingskategori = df.stillingskategori.map(dict(STILLING="Registrering av formidling", FORMIDLING="Etterregistrering av formidling"))
 ```
 
 ```{python}
@@ -78,51 +79,39 @@ def plot_antall_faatt_jobb(df, kolonne, kolonne_navn):
             )
         )
     fig.update_layout(
-        #title_text="Antall fått jobben per " + kolonne_navn.lower(),
         xaxis_title=kolonne_navn,
         yaxis_title="Antall kandidater",
     )
-
-    # Legg til x-slider
-    #fig.update_layout(
-    #    xaxis=dict(autorange=True, rangeslider=dict(autorange=True, visible=True)),
-    #)
 
     return fig
 ```
 
 ```{python}
-def plot_andel_stilling(df, kolonne, kolonne_navn):
-    antall_stillinger = (
-        df[df.stillingskategori == "STILLING"].groupby(kolonne).antall.sum()
+def plot_andel_etterregistrering(df, kolonne, kolonne_navn):
+    antall_etterregistrering = (
+        df[df.stillingskategori == "Etterregistrering av formidling"].groupby(kolonne).antall.sum()
     )
     totalt_antall = df.groupby(kolonne).antall.sum()
 
-    andel_stilling = antall_stillinger / totalt_antall
-    andel_stilling = andel_stilling.reset_index()
+    andel_etterregistrering = antall_etterregistrering / totalt_antall
+    andel_etterregistrering = andel_etterregistrering.reset_index()
 
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=andel_stilling[kolonne],
-            y=andel_stilling.antall,
-            name="Andel stilling",
+            x=andel_etterregistrering[kolonne],
+            y=andel_etterregistrering.antall,
+            name="Andel etterregistrering",
             mode="lines+markers",
             line=dict(width=2),
             marker=dict(size=4),
         )
     )
     fig.update_layout(
-        #title_text="Andel stilling (STILLING / TOTALT) per " + kolonne_navn.lower(),
         xaxis_title=kolonne_navn,
         yaxis_title="Andel",
     )
     fig.update_yaxes(range=[0, 1])
-
-    # Legg til x-slider
-    #fig.update_layout(
-    #    xaxis=dict(autorange=True, rangeslider=dict(autorange=True, visible=True)),
-    #)
 
     return fig
 ```
@@ -169,20 +158,20 @@ fig.show()
 ## Row
 
 ```{python}
-#| title: Andel stilling (STILLING / TOTALT) per måned
-fig = plot_andel_stilling(df, "tidspunkt_utfall_yearmonth", "Måned")
+#| title: Andel etterregistrering per måned
+fig = plot_andel_etterregistrering(df, "tidspunkt_utfall_yearmonth", "Måned")
 fig.show()
 ```
 
 ```{python}
-#| title: Andel stilling (STILLING / TOTALT) per tertial
-fig = plot_andel_stilling(df, "tidspunkt_utfall_tertial", "Tertial")
+#| title: Andel etterregistrering per tertial
+fig = plot_andel_etterregistrering(df, "tidspunkt_utfall_tertial", "Tertial")
 fig.show()
 ```
 
 ```{python}
-#| title: Andel stilling (STILLING / TOTALT) per år
-fig = plot_andel_stilling(df, "tidspunkt_utfall_aar", "År")
+#| title: Andel etterregistrering per år
+fig = plot_andel_etterregistrering(df, "tidspunkt_utfall_aar", "År")
 fig.show()
 ```
 
