@@ -1,4 +1,4 @@
-# Formidlingstall
+# Etterregistrering av formidling
 
 <span style="color:red;">
 NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
