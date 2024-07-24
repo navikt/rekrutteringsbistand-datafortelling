@@ -175,3 +175,105 @@ fig = plot_andel_etterregistrering(df, "tidspunkt_utfall_aar", "År")
 fig.show()
 ```
 
+# Etterregistrering per kontor (2024)
+
+<span style="color:red;">
+NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
+</span>
+
+Kun data fra 2024.
+
+## Row
+
+```{python}
+query = f"""
+    select
+        l.stillingskategori,
+        navkontor,
+        count(*) as antall
+    from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` u
+        inner join `rekrutteringsbistand_kandidat.veilkandliste` l on u.stillingsid = l.stilling_id
+    where u.utfall = 'FATT_JOBBEN'
+        and l.stillingskategori IN ('STILLING', 'FORMIDLING')
+        and tidspunkt >= '2024-01-01'
+    group by l.stillingskategori, navkontor
+    order by navkontor
+    """
+df_kontor = bq_client.query(query=query).to_dataframe()
+```
+
+```{python}
+registrering = df_kontor[df_kontor.stillingskategori == "STILLING"].groupby("navkontor").antall.sum().rename("registrering")
+etterregistrering = df_kontor[df_kontor.stillingskategori == "FORMIDLING"].groupby("navkontor").antall.sum().rename("etterregistrering")
+
+df_kontor = pd.concat([registrering, etterregistrering], axis=1).reset_index().fillna(0)
+df_kontor["andel_etterregistrering"] = df_kontor.etterregistrering / (df_kontor.registrering + df_kontor.etterregistrering)
+```
+
+```{python}
+#| title: Andel etterregistrering
+fig = go.Figure(
+    data=[
+        go.Histogram(
+            x=df_kontor.andel_etterregistrering
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="Andel etterregistrering",
+    yaxis_title="Antall kontorer",
+)
+fig.show()
+```
+
+```{python}
+#| title: Totalt antall registreringer vs andel etterregistrering
+fig = go.Figure(
+    data=[
+        go.Scatter(
+            x=df_kontor.registrering + df_kontor.etterregistrering,
+            y=df_kontor.andel_etterregistrering,
+            mode='markers',
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="Totalt antall registreringer",
+    yaxis_title="Andel etterregistrering",
+)
+fig.show()
+```
+
+## Row
+
+```{python}
+#| title: Antall etterregistreringer
+fig = go.Figure(
+    data=[
+        go.Histogram(
+            x=df_kontor.etterregistrering
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="Antall etterregistreringer",
+    yaxis_title="Antall kontorer",
+)
+fig.show()
+```
+
+```{python}
+#| title: Antall registreringer av formidling
+fig = go.Figure(
+    data=[
+        go.Histogram(
+            x=df_kontor.registrering
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="Antall registreringer",
+    yaxis_title="Antall kontorer",
+)
+fig.show()
+```
