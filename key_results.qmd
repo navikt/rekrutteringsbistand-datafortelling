@@ -5,6 +5,15 @@ NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
 </span>
 
 ```{python}
+from google.cloud.bigquery import Client
+```
+
+```{python}
+project = "toi-prod-324e"
+bq_client = Client(project)
+```
+
+```{python}
 query = f"""
     select count(distinct stilling_id) from visning_kontaktinfo
     inner join kandidatliste
@@ -18,7 +27,7 @@ query = f"""
         (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
     );
     """
-df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe()
+#df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -28,8 +37,7 @@ query = f"""
         where stilling_opprettet_tidspunkt is not null
     ) as unike_kandidatlister
     """
-df_antall_kandidatlister_tilknyttet_stilling = bq_client.query(query=query).
-to_dataframe()
+#df_antall_kandidatlister_tilknyttet_stilling = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -57,8 +65,7 @@ query = f"""
             (fått_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
         )
     """
-df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = bq_client.query(query=query).
-to_dataframe()
+#df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -82,8 +89,7 @@ query = f"""
         and kandidatliste.stilling_opprettet_tidspunkt is not null
         and stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null;
     """
-df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat = bq_client.query(query=query).
-to_dataframe()
+#df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -93,8 +99,7 @@ query = f"""
             where er_direktemeldt is true and stilling_opprettet_tidspunkt is not null
     ) as unike_kandidatlister
     """
-df_antall_kandidatlister_tilknyttet_direktemeldt_stilling = bq_client.query(query=query).
-to_dataframe()
+#df_antall_kandidatlister_tilknyttet_direktemeldt_stilling = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -120,8 +125,7 @@ query = f"""
         )
     group by maaned;
     """
-df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).
-to_dataframe()
+#df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -141,8 +145,7 @@ query = f"""
     where unike_kandidatlister.stilling_opprettet_tidspunkt >= '2023-03-01'
     group by maaned
     """
-df_antall_kandidatlister_tilknyttet_stilling_per_maaned = bq_client.query(query=query).
-to_dataframe()
+#df_antall_kandidatlister_tilknyttet_stilling_per_maaned = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -179,8 +182,7 @@ query = f"""
         )
     group by maaned
     """
-df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned = bq_client.query(query=query).
-to_dataframe()
+#df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -216,8 +218,7 @@ query = f"""
     where unike_kandidatlister.stilling_opprettet_tidspunkt >= '2023-03-01'
     group by maaned;
     """
-df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned = bq_client.query(query=query).
-to_dataframe()
+#df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned = bq_client.query(query=query).to_dataframe()
 ```
 
 ```{python}
@@ -237,8 +238,7 @@ query = f"""
     where unike_kandidatlister.stilling_opprettet_tidspunkt >= '2023-03-01'
     group by maaned
     """
-df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned = bq_client.query(query=query).
-to_dataframe()
+#df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned = bq_client.query(query=query).to_dataframe()
 ```
 
 ## Row
