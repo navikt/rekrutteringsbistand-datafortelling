@@ -6,6 +6,7 @@ NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
 
 ```{python}
 from google.cloud.bigquery import Client
+import plotly.graph_objects as go
 ```
 
 ```{python}
@@ -27,7 +28,7 @@ query = f"""
         (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
     );
     """
-df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe()
+antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
 ```
 
 ```{python}
@@ -36,7 +37,7 @@ query = f"""
     from `rekrutteringsbistand_statistikk_pg15.kandidatliste`
     where stilling_opprettet_tidspunkt is not null
     """
-df_antall_kandidatlister_tilknyttet_stilling = bq_client.query(query=query).to_dataframe()
+antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).result())[0]
 ```
 
 ```{python}
@@ -104,7 +105,7 @@ df_antall_kandidatlister_tilknyttet_direktemeldt_stilling = bq_client.query(quer
 ```{python}
 query = f"""
     select
-        format_datetime('%Y-%m', visning_kontaktinfo.tidspunkt) as tidspunkt_utfall_yearmonth,
+        format_datetime('%Y-%m', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonth,
         count(distinct stilling_id)
     from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
         inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
@@ -118,10 +119,10 @@ query = f"""
             (hull_i_cv is true) or
             (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
         )
-    group by tidspunkt_utfall_yearmonth
-    order by tidspunkt_utfall_yearmonth;
+    group by tidspunkt_visning_kontaktinfo_yearmonth
+    order by tidspunkt_visning_kontaktinfo_yearmonth;
     """
-df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).to_dataframe()
+df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonth')
 ```
 
 ```{python}
@@ -137,7 +138,7 @@ query = f"""
     group by tidspunkt_stilling_opprettet_yearmonth
     order by tidspunkt_stilling_opprettet_yearmonth;
     """
-df_antall_kandidatlister_tilknyttet_stilling_per_maaned = bq_client.query(query=query).to_dataframe()
+df_antall_kandidatlister_tilknyttet_stilling_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
 ```
 
 ```{python}
@@ -226,10 +227,12 @@ df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned = bq_client
 ```{python}
 #| component: valuebox
 #| title: Minst én i prioritert målgruppe fikk vist sin kontatktinfo
+minst_en_i_prioritert_gruppe_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
 dict(
     icon = "eye",
     color = "primary",
-    value = 1
+    value = str(round(minst_en_i_prioritert_gruppe_fikk_vist_sin_kontaktinfo*100,1))+"%"
 )
 ```
 
@@ -250,4 +253,25 @@ dict(
     icon = "card-checklist",
     value = 1
 )
+```
+
+## Row
+```{python}
+#| title: Andel der minst én i prioritert målgruppe fikk vist sin kontaktinfo per måned
+andel_vist_kontaktinfo_prioritert_målgruppe = df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_vist_kontaktinfo_prioritert_målgruppe.index,
+            y=andel_vist_kontaktinfo_prioritert_målgruppe.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%'
+)
+fig.show()
 ```
