@@ -59,7 +59,7 @@ df = df.sort_values("tidspunkt_utfall_yearmonth")
 ```
 
 ```{python}
-df.stillingskategori = df.stillingskategori.map(dict(STILLING="Registrering av formidling", FORMIDLING="Etterregistrering av formidling"))
+df.stillingskategori = df.stillingskategori.map(dict(STILLING="Formidlet via Rekbis", FORMIDLING="Etterregistrert i Rekbis"))
 ```
 
 ```{python}
@@ -89,7 +89,7 @@ def plot_antall_faatt_jobb(df, kolonne, kolonne_navn):
 ```{python}
 def plot_andel_etterregistrering(df, kolonne, kolonne_navn):
     antall_etterregistrering = (
-        df[df.stillingskategori == "Etterregistrering av formidling"].groupby(kolonne).antall.sum()
+        df[df.stillingskategori == "Etterregistrert i Rekbis"].groupby(kolonne).antall.sum()
     )
     totalt_antall = df.groupby(kolonne).antall.sum()
 
@@ -110,6 +110,7 @@ def plot_andel_etterregistrering(df, kolonne, kolonne_navn):
     fig.update_layout(
         xaxis_title=kolonne_navn,
         yaxis_title="Andel",
+        yaxis_tickformat = ',.1%',
     )
     fig.update_yaxes(range=[0, 1])
 
@@ -138,19 +139,19 @@ df["tidspunkt_utfall_aar"] = df["tidspunkt_utfall_yearmonth"].str[:4]
 ## Row
 
 ```{python}
-#| title: Antall fått jobben per måned
+#| title: Antall formidlinger per måned
 fig = plot_antall_faatt_jobb(df, "tidspunkt_utfall_yearmonth", "Måned")
 fig.show()
 ```
 
 ```{python}
-#| title: Antall fått jobben per tertial
+#| title: Antall formidlinger per tertial
 fig = plot_antall_faatt_jobb(df, "tidspunkt_utfall_tertial", "Tertial")
 fig.show()
 ```
 
 ```{python}
-#| title: Antall fått jobben per år
+#| title: Antall formidlinger per år
 fig = plot_antall_faatt_jobb(df, "tidspunkt_utfall_aar", "År")
 fig.show()
 ```
@@ -211,23 +212,29 @@ df_kontor["andel_etterregistrering"] = df_kontor.etterregistrering / (df_kontor.
 ```
 
 ```{python}
-#| title: Andel etterregistrering
+#| title: Antall kontorer per andel etterregistrering (2024)
 fig = go.Figure(
     data=[
         go.Histogram(
-            x=df_kontor.andel_etterregistrering
+            x=df_kontor.andel_etterregistrering,
+            xbins=dict(
+                start=0,
+                end=1,
+                size=0.1
+            ),
         )
     ]
 )
 fig = fig.update_layout(
     xaxis_title="Andel etterregistrering",
     yaxis_title="Antall kontorer",
+    xaxis_tickformat = ',.1%',
 )
 fig.show()
 ```
 
 ```{python}
-#| title: Totalt antall registreringer vs andel etterregistrering
+#| title: Totalt antall formidlinger vs andel etterregistrering (2024)
 fig = go.Figure(
     data=[
         go.Scatter(
@@ -238,8 +245,9 @@ fig = go.Figure(
     ]
 )
 fig = fig.update_layout(
-    xaxis_title="Totalt antall registreringer",
+    xaxis_title="Totalt antall formidlinger",
     yaxis_title="Andel etterregistrering",
+    yaxis_tickformat = ',.1%',
 )
 fig.show()
 ```
@@ -247,23 +255,23 @@ fig.show()
 ## Row
 
 ```{python}
-#| title: Antall etterregistreringer
+#| title: Antall kontorer per antall etterregistrert i Rekbis (2024)
 fig = go.Figure(
     data=[
         go.Histogram(
-            x=df_kontor.etterregistrering
+            x=df_kontor.etterregistrering,
         )
     ]
 )
 fig = fig.update_layout(
-    xaxis_title="Antall etterregistreringer",
+    xaxis_title="Antall etterregistrert i Rekbis",
     yaxis_title="Antall kontorer",
 )
 fig.show()
 ```
 
 ```{python}
-#| title: Antall registreringer av formidling
+#| title: Antall kontorer per antall formidlet via Rekbis (2024)
 fig = go.Figure(
     data=[
         go.Histogram(
@@ -272,7 +280,7 @@ fig = go.Figure(
     ]
 )
 fig = fig.update_layout(
-    xaxis_title="Antall registreringer",
+    xaxis_title="Antall formidlet via Rekbis",
     yaxis_title="Antall kontorer",
 )
 fig.show()
