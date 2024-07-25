@@ -323,3 +323,102 @@ fig = fig.update_layout(
 fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
+
+## Row
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der minst én i prioritert målgruppe fikk vist sin kontaktinfo
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der kandidater i prioritert målgruppe fikk jobben
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Antall direktemeldte stillinger med minst én presentert kandidat
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.index,
+            y=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Nye stillinger med kandidatliste
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_tilknyttet_stilling_per_maaned.index,
+            y=df_antall_kandidatlister_tilknyttet_stilling_per_maaned.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Nye direktemeldte stillinger
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned.index,
+            y=df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
