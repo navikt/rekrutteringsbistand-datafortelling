@@ -271,7 +271,9 @@ fig = go.Figure(
 fig = fig.update_layout(
     xaxis_title="",
     yaxis_title="",
-    yaxis_tickformat = ',.0%'
+    yaxis_tickformat = ',.0%',
 )
+
+fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
