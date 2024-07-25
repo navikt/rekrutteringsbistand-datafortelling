@@ -25,7 +25,7 @@ spec:
     bigQueryDatasets:
       - name: rekrutteringsbistand_kandidat
         permission: READ
-      - name: rekrutteringsbistand_statistikk
+      - name: rekrutteringsbistand_statistikk_pg15
         permission: READ
   envFrom:
     - secret: rekrutteringsbistand-nada-secret # secret i nais-console
