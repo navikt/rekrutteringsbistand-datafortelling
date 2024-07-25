@@ -302,3 +302,24 @@ fig = fig.update_layout(
 fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
+```{python}
+#| title: Andel direktemeldte stillinger med minst én presentert kandidat
+andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat = df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned / df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index,
+            y=andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
