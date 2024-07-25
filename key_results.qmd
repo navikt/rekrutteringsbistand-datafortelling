@@ -171,7 +171,7 @@ query = f"""
     group by tidspunkt_stilling_opprettet_yearmonth
     order by tidspunkt_stilling_opprettet_yearmonth;
     """
-df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe()
+df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
 ```
 
 ```{python}
@@ -203,7 +203,7 @@ query = f"""
     group by tidspunkt_stilling_opprettet_yearmonth
     order by tidspunkt_stilling_opprettet_yearmonth;
     """
-df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned = bq_client.query(query=query).to_dataframe()
+df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
 ```
 
 ```{python}
@@ -219,7 +219,7 @@ query = f"""
     group by tidspunkt_stilling_opprettet_yearmonth
     order by tidspunkt_stilling_opprettet_yearmonth;
     """
-df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned = bq_client.query(query=query).to_dataframe()
+df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
 ```
 
 ## Row
@@ -269,6 +269,27 @@ fig = go.Figure(
         go.Bar(
             x=andel_vist_kontaktinfo_prioritert_målgruppe.index,
             y=andel_vist_kontaktinfo_prioritert_målgruppe.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat i prioritert målgruppe fikk jobben
+andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.f0_ ,
         )
     ]
 )
