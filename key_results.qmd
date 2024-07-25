@@ -65,7 +65,7 @@ query = f"""
             (faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
         )
     """
-df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = bq_client.query(query=query).to_dataframe()
+antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = next(bq_client.query(query=query).result())[0]
 ```
 
 ```{python}
@@ -89,7 +89,7 @@ query = f"""
         and kandidatliste.stilling_opprettet_tidspunkt is not null
         and stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null;
     """
-df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat = bq_client.query(query=query).to_dataframe()
+antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat = next(bq_client.query(query=query).result())[0]
 ```
 
 ```{python}
@@ -99,7 +99,7 @@ query = f"""
             where er_direktemeldt is true and stilling_opprettet_tidspunkt is not null
     ) as unike_kandidatlister
     """
-df_antall_kandidatlister_tilknyttet_direktemeldt_stilling = bq_client.query(query=query).to_dataframe()
+antall_kandidatlister_tilknyttet_direktemeldt_stilling = next(bq_client.query(query=query).result())[0]
 ```
 
 ```{python}
@@ -239,19 +239,23 @@ dict(
 ```{python}
 #| component: valuebox
 #| title: Kandidater i prioritert målgruppe som fikk jobben
+kandidater_i_prioritert_gruppe_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
 dict(
     icon = "check-circle",
     color = "warning",
-    value = 1
+    value = str(round(kandidater_i_prioritert_gruppe_som_fikk_jobben*100,1))+"%"
 )
 ```
 
 ```{python}
 #| component: valuebox
 #| title: Direktemeldte stillinger med minst én presentert kandidat
+direktemeldte_stillinger_med_minst_en_presentert_kandidat = antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat/antall_kandidatlister_tilknyttet_direktemeldt_stilling
+
 dict(
     icon = "card-checklist",
-    value = 1
+    value = str(round(direktemeldte_stillinger_med_minst_en_presentert_kandidat*100,1))+"%"
 )
 ```
 
