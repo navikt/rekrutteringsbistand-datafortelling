@@ -1,4 +1,4 @@
-# Key results
+# Key results {orientation="rows" scrolling="true"}
 
 <span style="color:red;">
 NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
@@ -302,6 +302,8 @@ fig = fig.update_layout(
 fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
+
+## Row
 ```{python}
 #| title: Andel direktemeldte stillinger med minst én presentert kandidat
 andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat = df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned / df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned
@@ -323,8 +325,6 @@ fig = fig.update_layout(
 fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
-
-## Row
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én i prioritert målgruppe fikk vist sin kontaktinfo
 
@@ -344,6 +344,8 @@ fig = fig.update_layout(
 fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
+
+## Row
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater i prioritert målgruppe fikk jobben
 
