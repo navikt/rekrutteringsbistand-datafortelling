@@ -222,6 +222,28 @@ query = f"""
 df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
 ```
 
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where (
+        (alder < 30 or alder > 49) or
+        (hull_i_cv is true) or
+        (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+    )
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
+
 ## Row
 
 ```{python}
@@ -422,5 +444,25 @@ fig = fig.update_layout(
 )
 
 fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Antall der minst én i prioritert målgruppe fikk vist sin kontaktinfo
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo.f0_ ,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
 fig.show()
 ```
