@@ -1,4 +1,4 @@
-# Key results (gammel) {orientation="rows" scrolling="true"}
+# Key results (ny) {orientation="rows" scrolling="true"}
 
 <span style="color:red;">
 NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
