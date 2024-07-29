@@ -275,6 +275,37 @@ query = f"""
     """
 df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_faatt_jobben_yearmonthday')
 ```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        group by aktorid, kandidatlisteid
+    ),
+    presentert_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+            and (utfall = 'FATT_JOBBEN' or utfall = 'PRESENTERT')
+    )
+    select 
+        format_datetime('%Y-%m-%d', unike_kandidatlister.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonthday,
+        count(unike_kandidatlister.kandidatliste_id)
+    from (
+        select distinct kandidatliste_id, stilling_opprettet_tidspunkt
+        from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            inner join presentert_utfall
+                on presentert_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+            inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+        where kandidatliste.er_direktemeldt is true
+            and kandidatliste.stilling_opprettet_tidspunkt is not null
+            and stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null
+    ) as unike_kandidatlister
+    where unike_kandidatlister.stilling_opprettet_tidspunkt >= '2023-03-01'
+    group by tidspunkt_stilling_opprettet_yearmonthday
+    order by tidspunkt_stilling_opprettet_yearmonthday;
+    """
+df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonthday')
+```
 
 ## Row
 
@@ -506,6 +537,24 @@ fig = go.Figure(
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben.index[-3:],
             y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben.f0_[-3:],
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Direktemeldte stillinger med minst én presentert kandidat
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index[-3:],
+            y=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.f0_[-3:],
         )
     ]
 )
