@@ -244,6 +244,38 @@ query = f"""
 df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
 ```
 
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+    format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
+    count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and (
+            (faatt_jobben_utfall.alder < 30 or faatt_jobben_utfall.alder > 49) or 
+            (faatt_jobben_utfall.hull_i_cv is true) or 
+            (faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+        )
+    group by tidspunkt_faatt_jobben_yearmonthday
+    order by tidspunkt_faatt_jobben_yearmonthday;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_faatt_jobben_yearmonthday')
+```
+
 ## Row
 
 ```{python}
@@ -455,7 +487,25 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
-            y=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo.f0_ ,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der kandidater i prioritert målgruppe fikk jobben
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben.index[-3:],
+            y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben.f0_[-3:],
         )
     ]
 )
