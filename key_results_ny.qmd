@@ -32,10 +32,14 @@ antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faat
 ```
 
 ```{python}
+# Det gjelder kandidatlister tilknyttet både eksterne og direktemeldte stillinger
 query = f"""
     select count(distinct kandidatliste_id) 
-    from `rekrutteringsbistand_statistikk_pg15.kandidatliste`
+    from `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+            on kandidatliste.stillings_id = stilling.uuid
     where stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
     """
 antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).result())[0]
 ```
@@ -126,13 +130,18 @@ df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_f
 ```
 
 ```{python}
+# Det gjelder kandidatlister tilknyttet både eksterne og direktemeldte stillinger
 query = f"""
     select 
         format_datetime('%Y-%m', unike_kandidatlister.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
-    count(unike_kandidatlister.kandidatliste_id)
+        count(unike_kandidatlister.kandidatliste_id)
     from (
-        select distinct kandidatliste_id, stilling_opprettet_tidspunkt from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        select distinct kandidatliste_id, stilling_opprettet_tidspunkt
+        from `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
         where stilling_opprettet_tidspunkt is not null
+            and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
     ) as unike_kandidatlister
     where unike_kandidatlister.stilling_opprettet_tidspunkt >= '2023-03-01'
     group by tidspunkt_stilling_opprettet_yearmonth
