@@ -145,6 +145,8 @@ df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_f
 ```{python}
 # Det gjelder kandidatlister tilknyttet både eksterne og direktemeldte stillinger
 query = f"""
+    -- Nevner
+    
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillinger
@@ -384,7 +386,6 @@ fig = fig.update_layout(
 
 fig = fig.update_xaxes(nticks=24)
 fig.show()
-df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned
 ```
 ```{python}
 #| title: Andel av stillingene hvor minst én kandidat i prioritert målgruppe fikk jobben
