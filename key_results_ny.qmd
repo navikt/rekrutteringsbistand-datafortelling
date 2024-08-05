@@ -181,7 +181,7 @@ query = f"""
     )
     select 
         format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
-        count(distinct kandidatliste_id)
+        count(distinct kandidatliste_id) as antall_stillinger
     from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
@@ -376,11 +376,16 @@ dict(
 #| title: Andel der minst én i prioritert målgruppe fikk vist sin kontaktinfo per måned
 andel_vist_kontaktinfo_prioritert_målgruppe = df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
+colors = ['lightslategray',] * len(andel_vist_kontaktinfo_prioritert_målgruppe.index)
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
 fig = go.Figure(
     data=[
         go.Bar(
             x=andel_vist_kontaktinfo_prioritert_målgruppe.index,
             y=andel_vist_kontaktinfo_prioritert_målgruppe.antall_stillinger,
+            marker_color=colors,
         )
     ]
 )
@@ -401,7 +406,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.index,
-            y=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.f0_ ,
+            y=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.antall_stillinger,
         )
     ]
 )
@@ -465,7 +470,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index,
-            y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.f0_ ,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.antall_stillinger,
         )
     ]
 )
