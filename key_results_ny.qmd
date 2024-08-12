@@ -444,11 +444,16 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én i prioritert målgruppe fikk vist sin kontaktinfo
 
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
 fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
             y=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            marker_color=colors,
         )
     ]
 )
@@ -465,11 +470,17 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater i prioritert målgruppe fikk jobben
 
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
 fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index,
             y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.antall_stillinger,
+            marker_color=colors,
         )
     ]
 )
@@ -484,11 +495,17 @@ fig.show()
 ```{python}
 #| title: Antall direktemeldte stillinger med minst én presentert kandidat
 
+colors = ['lightslategray',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
 fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.index,
             y=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.antall_stillinger,
+            marker_color=colors,
         )
     ]
 )
