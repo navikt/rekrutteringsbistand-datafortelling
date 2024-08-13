@@ -390,6 +390,13 @@ dict(
 ```
 
 ## Row
+::: {.callout-note}
+## Prioriterte målgrupper
+
+Prioriterte målgrupper vil i denne sammenheng være de under 30 år, de fra 50 år og oppover, og/eller de med hull i CV.
+:::
+
+## Row
 ```{python}
 #| title: Andel der minst én i prioritert målgruppe fikk vist sin kontaktinfo per måned
 andel_vist_kontaktinfo_prioritert_målgruppe = df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
