@@ -81,7 +81,7 @@ antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben 
 ```{python}
 query = f"""
     with presentert_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        select distinct kandidatlisteid, aktorid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
         inner join `kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
         inner join `kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
         where sendt_til_arbeidsgivers_kandidatliste = true
@@ -213,7 +213,7 @@ query = f"""
 
 
     with presentert_utfall as (
-            select kandidatutfall.tidspunkt, kandidatutfall.kandidatlisteid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+            select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
             inner join `kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
             inner join `kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
             where sendt_til_arbeidsgivers_kandidatliste = true
@@ -317,7 +317,7 @@ df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobb
 ```{python}
 query = f"""
     with presentert_utfall as (
-        select kandidatutfall.tidspunkt, kandidatutfall.kandidatlisteid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
             inner join `kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
             inner join `kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
             where sendt_til_arbeidsgivers_kandidatliste = true
