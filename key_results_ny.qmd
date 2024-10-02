@@ -1579,3 +1579,88 @@ fig = fig.update_layout(
 fig.show()
 ```
 
+## Row
+```{python}
+#| title: Antall der minst én med hull i CV'en fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der minst én under 30 år fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der minst én som er 50 år eller eldre fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der minst én med innsatsbehov fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
