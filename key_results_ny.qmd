@@ -371,7 +371,7 @@ dict(
 
 ```{python}
 #| component: valuebox
-#| title: Direktemeldte stillinger med minst én presentert kandidat
+#| title: Direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 direktemeldte_stillinger_med_minst_en_presentert_kandidat = antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat/antall_kandidatlister_tilknyttet_direktemeldt_stilling
 
 dict(
@@ -445,7 +445,7 @@ fig.show()
 
 ## Row
 ```{python}
-#| title: Andel direktemeldte stillinger med minst én presentert kandidat
+#| title: Andel direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat = df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned / df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned
 
 colors = ['lightslategray',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
@@ -525,7 +525,7 @@ fig.show()
 ```
 
 ```{python}
-#| title: Antall direktemeldte stillinger med minst én presentert kandidat
+#| title: Antall direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 
 colors = ['lightslategray',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
 colors[-3] = 'crimson'
@@ -643,7 +643,7 @@ fig.show()
 ```
 
 ```{python}
-#| title: Direktemeldte stillinger med minst én presentert kandidat
+#| title: Direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 
 colors = ['lightslategray',] * len(df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index[-3:])
 
