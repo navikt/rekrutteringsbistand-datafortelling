@@ -715,6 +715,52 @@ dict(
 ```
 
 ## Row
+```{python}
+#| component: valuebox
+#| title: Kandidater med hull i CV'en som fikk jobben
+kandidater_med_hull_i_CV_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_med_hull_i_CV_som_fikk_jobben*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Kandidater under 30 år som fikk jobben
+kandidater_under_30_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_under_30_som_fikk_jobben*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Kandidater 50 år eller eldre som fikk jobben
+kandidater_50_eller_eldre_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_50_eller_eldre_som_fikk_jobben*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Kandidater med innsatsbehov som fikk jobben
+kandidater_med_innsatsbehov_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_med_innsatsbehov_som_fikk_jobben*100,1))+"%"
+)
+```
+
+## Row
 ::: {.callout-note}
 ## Definisjoner
 **Prioriterte målgrupper**
