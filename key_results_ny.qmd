@@ -713,6 +713,74 @@ query = f"""
     """
 df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
 ```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where hull_i_cv is true
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where alder < 30
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where alder >= 50
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where innsatsbehov in ('VARIG', 'BATT', 'BFORM')
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
 
 ```{python}
 query = f"""
@@ -1510,3 +1578,4 @@ fig = fig.update_layout(
 
 fig.show()
 ```
+
