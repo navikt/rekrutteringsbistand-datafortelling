@@ -191,6 +191,52 @@ query = f"""
     """
 antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben = next(bq_client.query(query=query).result())[0]
 ```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.alder >= 50
+    """
+antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM')
+    """
+antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben = next(bq_client.query(query=query).result())[0]
+```
 
 ```{python}
 query = f"""
