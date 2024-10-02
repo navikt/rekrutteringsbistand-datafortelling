@@ -1090,6 +1090,16 @@ Prioriterte målgrupper vil i denne sammenheng være de under 30 år, de fra 50 
 **Deling av CV digitalt med arbeidsgiver**
 
 For å kunne dele en CV digitalt med arbeidsgiver så kreves det først aksept til deling av CV fra personbruker til den konkrete stillingen. Når denne aksepten foreligger, så kan eier av stillingen i Rekrutteringsbistand velge å dele CV digitalt med arbeidsgiver. Denne CV-en vil havne i arbeidsgiverens kandidatliste tilknyttet den konkrete stillingen, som ligger på "Min Side - arbeidsgiver" på nav.no.
+
+**Innsatsbehov**
+
+De ulike innsatsbehov-gruppene som brukes i disse målingene her er: 
+
+- Situasjonsbestemt innsats (BFORM)
+
+- Spesielt tilpasset innsats (BATT)
+
+- Varig tilpasset innsats (VARIG)
 :::
 
 ## Row
