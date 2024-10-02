@@ -371,7 +371,7 @@ dict(
 
 ```{python}
 #| component: valuebox
-#| title: Direktemeldte stillinger med minst én presentert kandidat
+#| title: Direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 direktemeldte_stillinger_med_minst_en_presentert_kandidat = antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat/antall_kandidatlister_tilknyttet_direktemeldt_stilling
 
 dict(
@@ -385,6 +385,13 @@ dict(
 ## Prioriterte målgrupper
 
 Prioriterte målgrupper vil i denne sammenheng være de under 30 år, de fra 50 år og oppover, og/eller de med hull i CV.
+:::
+
+## Row
+::: {.callout-note}
+## Deling av CV digitalt med arbeidsgiver
+
+For å kunne dele en CV digitalt med arbeidsgiver så kreves det først aksept til deling av CV fra personbruker til den konkrete stillingen. Når denne aksepten foreligger, så kan eier av stillingen i Rekrutteringsbistand velge å dele CV digitalt med arbeidsgiver. Denne CV-en vil havne i arbeidsgiverens kandidatliste tilknyttet den konkrete stillingen, som ligger på "Min Side - arbeidsgiver" på nav.no.
 :::
 
 ## Row
@@ -445,7 +452,7 @@ fig.show()
 
 ## Row
 ```{python}
-#| title: Andel direktemeldte stillinger med minst én presentert kandidat
+#| title: Andel direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat = df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned / df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned
 
 colors = ['lightslategray',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
@@ -525,7 +532,7 @@ fig.show()
 ```
 
 ```{python}
-#| title: Antall direktemeldte stillinger med minst én presentert kandidat
+#| title: Antall direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 
 colors = ['lightslategray',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
 colors[-3] = 'crimson'
@@ -643,7 +650,7 @@ fig.show()
 ```
 
 ```{python}
-#| title: Direktemeldte stillinger med minst én presentert kandidat
+#| title: Direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 
 colors = ['lightslategray',] * len(df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index[-3:])
 
