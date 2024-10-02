@@ -974,6 +974,119 @@ fig.show()
 
 ## Row
 ```{python}
+#| title: Andel av stillingene hvor minst én kandidat med hull i CV'en fikk jobben
+andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat under 30 år fikk jobben
+andel_stillinger_hvor_minst_en_under_30_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_under_30_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_under_30_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_under_30_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat 50 år eller eldre fikk jobben
+andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat med innsatsbehov fikk jobben
+andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
 #| title: Andel direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat = df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned / df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned
 
