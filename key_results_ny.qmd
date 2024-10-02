@@ -577,6 +577,52 @@ dict(
 ```
 
 ## Row
+```{python}
+#| component: valuebox
+#| title: Minst én med hull i CV'en fikk vist sin kontatktinfo
+minst_en_med_hull_i_CV_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_med_hull_i_CV_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Minst én under 30 år fikk vist sin kontatktinfo
+minst_en_under_30_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_under_30_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Minst én 50 år eller eldre fikk vist sin kontatktinfo
+minst_en_50_eller_eldre_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_50_eller_eldre_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Minst én med innsatsbehov fikk vist sin kontatktinfo
+minst_en_med_innsatsbehov_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_med_innsatsbehov_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+
+## Row
 ::: {.callout-note}
 ## Definisjoner
 **Prioriterte målgrupper**
