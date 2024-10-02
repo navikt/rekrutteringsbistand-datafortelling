@@ -37,6 +37,74 @@ antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faat
 ```
 
 ```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and hull_i_cv is true;
+    """
+antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and alder < 30;
+    """
+antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and alder >= 50;
+    """
+antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and innsatsbehov in ('VARIG', 'BATT', 'BFORM');
+    """
+antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
 # Det gjelder kandidatlister tilknyttet både eksterne og direktemeldte stillinger
 query = f"""
     select count(distinct kandidatliste_id) 
