@@ -1636,7 +1636,7 @@ fig.show()
 ```{python}
 #| title: Antall der minst én i prioritert målgruppe fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1703,7 +1703,7 @@ fig.show()
 ```{python}
 #| title: Antall der minst én med hull i CV'en fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1724,7 +1724,7 @@ fig.show()
 ```{python}
 #| title: Antall der minst én under 30 år fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1745,7 +1745,7 @@ fig.show()
 ```{python}
 #| title: Antall der minst én som er 50 år eller eldre fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1766,7 +1766,7 @@ fig.show()
 ```{python}
 #| title: Antall der minst én med innsatsbehov fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
 
 fig = go.Figure(
     data=[
