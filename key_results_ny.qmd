@@ -37,6 +37,74 @@ antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faat
 ```
 
 ```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and hull_i_cv is true;
+    """
+antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and alder < 30;
+    """
+antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and alder >= 50;
+    """
+antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    select count(distinct stilling_id) as antall_stillinger from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and innsatsbehov in ('VARIG', 'BATT', 'BFORM');
+    """
+antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
+```
+```{python}
 # Det gjelder kandidatlister tilknyttet både eksterne og direktemeldte stillinger
 query = f"""
     select count(distinct kandidatliste_id) 
@@ -76,6 +144,98 @@ query = f"""
         )
     """
 antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.hull_i_cv is true
+    """
+antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.alder < 30
+    """
+antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.alder >= 50
+    """
+antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben = next(bq_client.query(query=query).result())[0]
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM')
+    """
+antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben = next(bq_client.query(query=query).result())[0]
 ```
 
 ```{python}
@@ -146,6 +306,134 @@ df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_f
 ```
 
 ```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person med hull i CV som fikk vist sin kontaktinfo innen 60 dager etter at stillingen ble opprettet
+    -- Tall for juli for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+    -- Trenger ikke filtrere på type stilling siden vi kun har visning kontaktinfo på stilling-stillinger
+
+    -- teller
+    select
+    format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+    count(distinct stillings_id) as antall_stillinger
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and date_diff(
+        EXTRACT(DATE FROM visning_kontaktinfo.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 60
+    and hull_i_cv is true
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+
+```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person under 30 år som fikk vist sin kontaktinfo innen 60 dager etter at stillingen ble opprettet
+    -- Tall for juli for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+    -- Trenger ikke filtrere på type stilling siden vi kun har visning kontaktinfo på stilling-stillinger
+
+    -- teller
+    select
+    format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+    count(distinct stillings_id) as antall_stillinger
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and date_diff(
+        EXTRACT(DATE FROM visning_kontaktinfo.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 60
+    and alder < 30
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+
+```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person som er 50 år eller eldre som fikk vist sin kontaktinfo innen 60 dager etter at stillingen ble opprettet
+    -- Tall for juli for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+    -- Trenger ikke filtrere på type stilling siden vi kun har visning kontaktinfo på stilling-stillinger
+
+    -- teller
+    select
+    format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+    count(distinct stillings_id) as antall_stillinger
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and date_diff(
+        EXTRACT(DATE FROM visning_kontaktinfo.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 60
+    and alder >= 50
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+
+```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person med innsatsbehov som fikk vist sin kontaktinfo innen 60 dager etter at stillingen ble opprettet
+    -- Tall for juli for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+    -- Trenger ikke filtrere på type stilling siden vi kun har visning kontaktinfo på stilling-stillinger
+
+    -- teller
+    select
+    format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+    count(distinct stillings_id) as antall_stillinger
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+        on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+    and kandidatliste.stilling_opprettet_tidspunkt is not null
+    and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+    and date_diff(
+        EXTRACT(DATE FROM visning_kontaktinfo.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 60
+    and innsatsbehov in ('VARIG', 'BATT', 'BFORM')
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+
+```{python}
 # Det gjelder kandidatlister tilknyttet både eksterne og direktemeldte stillinger
 query = f"""
     -- Nevner
@@ -204,6 +492,150 @@ query = f"""
     order by tidspunkt_stilling_opprettet_yearmonth;
     """
 df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person med hull i CV som fikk jobben innen 90 dager etter at stillingen ble opprettet
+    -- Tall for juni for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+
+    
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+        format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+        count(distinct kandidatliste_id) as antall_stillinger
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and date_diff(
+        EXTRACT(DATE FROM faatt_jobben_utfall.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 90
+        and faatt_jobben_utfall.hull_i_cv is true
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person under 30 år som fikk jobben innen 90 dager etter at stillingen ble opprettet
+    -- Tall for juni for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+
+    
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+        format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+        count(distinct kandidatliste_id) as antall_stillinger
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and date_diff(
+        EXTRACT(DATE FROM faatt_jobben_utfall.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 90
+        and faatt_jobben_utfall.alder < 30
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person 50 år eller eldre som fikk jobben innen 90 dager etter at stillingen ble opprettet
+    -- Tall for juni for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+
+    
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+        format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+        count(distinct kandidatliste_id) as antall_stillinger
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and date_diff(
+        EXTRACT(DATE FROM faatt_jobben_utfall.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 90
+        and faatt_jobben_utfall.alder >= 50
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
+```
+```{python}
+query = f"""
+    -- Av de stillingene som ble opprettet i løpet av en måned, hvor mange av de var det minst én person med innsatsbehov som fikk jobben innen 90 dager etter at stillingen ble opprettet
+    -- Tall for juni for eks. vil være ferdigberegnet i slutten av september. Andelen kan bare øke etter måneden har gått.
+
+    
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+        format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
+        count(distinct kandidatliste_id) as antall_stillinger
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and date_diff(
+        EXTRACT(DATE FROM faatt_jobben_utfall.tidspunkt),
+        EXTRACT(DATE FROM kandidatliste.stilling_opprettet_tidspunkt),
+        DAY) <= 90
+        and faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM')
+    group by tidspunkt_stilling_opprettet_yearmonth
+    order by tidspunkt_stilling_opprettet_yearmonth;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonth')
 ```
 
 ```{python}
@@ -281,6 +713,74 @@ query = f"""
     """
 df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
 ```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where hull_i_cv is true
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where alder < 30
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where alder >= 50
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
+```{python}
+query = f"""
+    select 
+    format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
+    count(distinct stilling_id) 
+    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+            on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
+    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+        on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
+        and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
+    where innsatsbehov in ('VARIG', 'BATT', 'BFORM')
+    group by tidspunkt_visning_kontaktinfo_yearmonthday
+    order by tidspunkt_visning_kontaktinfo_yearmonthday;
+    """
+df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_visning_kontaktinfo_yearmonthday')
+```
 
 ```{python}
 query = f"""
@@ -312,6 +812,114 @@ query = f"""
     order by tidspunkt_faatt_jobben_yearmonthday;
     """
 df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_faatt_jobben_yearmonthday')
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+    format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
+    count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.hull_i_cv is true
+    group by tidspunkt_faatt_jobben_yearmonthday
+    order by tidspunkt_faatt_jobben_yearmonthday;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_faatt_jobben_yearmonthday')
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+    format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
+    count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.alder < 30
+    group by tidspunkt_faatt_jobben_yearmonthday
+    order by tidspunkt_faatt_jobben_yearmonthday;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_faatt_jobben_yearmonthday')
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+    format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
+    count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.alder >= 50
+    group by tidspunkt_faatt_jobben_yearmonthday
+    order by tidspunkt_faatt_jobben_yearmonthday;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_faatt_jobben_yearmonthday')
+```
+```{python}
+query = f"""
+    with id_siste_utfall_per_kandidat_per_liste as (
+        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        group by aktorid, kandidatlisteid
+    ),
+    faatt_jobben_utfall as (
+        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        where id in (select * from id_siste_utfall_per_kandidat_per_liste)
+        and utfall = 'FATT_JOBBEN'
+    )
+    select 
+    format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
+    count(distinct kandidatliste_id)
+    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+                inner join faatt_jobben_utfall
+                on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
+                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                on kandidatliste.stillings_id = stilling.uuid
+    where kandidatliste.stilling_opprettet_tidspunkt is not null
+        and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
+        and faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM')
+    group by tidspunkt_faatt_jobben_yearmonthday
+    order by tidspunkt_faatt_jobben_yearmonthday;
+    """
+df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_faatt_jobben_yearmonthday')
 ```
 
 ```{python}
@@ -381,17 +989,117 @@ dict(
 ```
 
 ## Row
-::: {.callout-note}
-## Prioriterte målgrupper
+```{python}
+#| component: valuebox
+#| title: Minst én med hull i CV'en fikk vist sin kontatktinfo
+minst_en_med_hull_i_CV_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
 
-Prioriterte målgrupper vil i denne sammenheng være de under 30 år, de fra 50 år og oppover, og/eller de med hull i CV.
-:::
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_med_hull_i_CV_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Minst én under 30 år fikk vist sin kontatktinfo
+minst_en_under_30_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_under_30_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Minst én 50 år eller eldre fikk vist sin kontatktinfo
+minst_en_50_eller_eldre_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_50_eller_eldre_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Minst én med innsatsbehov fikk vist sin kontatktinfo
+minst_en_med_innsatsbehov_fikk_vist_sin_kontaktinfo = antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "eye",
+    color = "primary",
+    value = str(round(minst_en_med_innsatsbehov_fikk_vist_sin_kontaktinfo*100,1))+"%"
+)
+```
+
+## Row
+```{python}
+#| component: valuebox
+#| title: Kandidater med hull i CV'en som fikk jobben
+kandidater_med_hull_i_CV_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_med_hull_i_CV_som_fikk_jobben*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Kandidater under 30 år som fikk jobben
+kandidater_under_30_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_under_30_som_fikk_jobben*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Kandidater 50 år eller eldre som fikk jobben
+kandidater_50_eller_eldre_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_50_eller_eldre_som_fikk_jobben*100,1))+"%"
+)
+```
+```{python}
+#| component: valuebox
+#| title: Kandidater med innsatsbehov som fikk jobben
+kandidater_med_innsatsbehov_som_fikk_jobben = antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben/antall_kandidatlister_tilknyttet_stilling
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_med_innsatsbehov_som_fikk_jobben*100,1))+"%"
+)
+```
 
 ## Row
 ::: {.callout-note}
-## Deling av CV digitalt med arbeidsgiver
+## Definisjoner
+**Prioriterte målgrupper**
+
+Prioriterte målgrupper vil i denne sammenheng være de under 30 år, de fra 50 år og oppover, og/eller de med hull i CV.
+
+**Deling av CV digitalt med arbeidsgiver**
 
 For å kunne dele en CV digitalt med arbeidsgiver så kreves det først aksept til deling av CV fra personbruker til den konkrete stillingen. Når denne aksepten foreligger, så kan eier av stillingen i Rekrutteringsbistand velge å dele CV digitalt med arbeidsgiver. Denne CV-en vil havne i arbeidsgiverens kandidatliste tilknyttet den konkrete stillingen, som ligger på "Min Side - arbeidsgiver" på nav.no.
+
+**Innsatsbehov**
+
+De ulike innsatsbehov-gruppene som brukes i disse målingene her er: 
+
+- Situasjonsbestemt innsats (BFORM)
+
+- Spesielt tilpasset innsats (BATT)
+
+- Varig tilpasset innsats (VARIG)
 :::
 
 ## Row
@@ -436,6 +1144,119 @@ fig = go.Figure(
         go.Bar(
             x=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.index,
             y=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat med hull i CV'en fikk jobben
+andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat under 30 år fikk jobben
+andel_stillinger_hvor_minst_en_under_30_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_under_30_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_under_30_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_under_30_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat 50 år eller eldre fikk jobben
+andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Andel av stillingene hvor minst én kandidat med innsatsbehov fikk jobben
+andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.index,
+            y=andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.antall_stillinger,
             marker_color=colors,
         )
     ]
@@ -506,6 +1327,107 @@ fig.show()
 
 ## Row
 ```{python}
+#| title: Antall arbeidsgivers kandidatlister der minst én kandidat med hull i CV fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der minst én kandidat under 30 år fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der minst én kandidat som er 50 år eller eldre fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der minst én kandidat med innsatsbehov fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater i prioritert målgruppe fikk jobben
 
 colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index)
@@ -544,6 +1466,110 @@ fig = go.Figure(
         go.Bar(
             x=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.index,
             y=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der kandidater med hull i CV fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.index,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der kandidater under 30 år fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.index,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der kandidater 50 år eller eldre fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.index,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Antall arbeidsgivers kandidatlister der kandidater med innsatsbehov fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.index)
+colors[-3] = 'crimson'
+colors[-2] = 'crimson'
+colors[-1] = 'crimson'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.index,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.antall_stillinger,
             marker_color=colors,
         )
     ]
@@ -659,6 +1685,178 @@ fig = go.Figure(
         go.Bar(
             x=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index[-3:],
             y=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Antall der minst én med hull i CV'en fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der minst én under 30 år fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der minst én som er 50 år eller eldre fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der minst én med innsatsbehov fikk vist sin kontaktinfo
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.index[-3:],
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+
+## Row
+```{python}
+#| title: Antall der kandidater med hull i CV fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben.index[-3:],
+            y=df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der kandidater under 30 år fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben.index[-3:],
+            y=df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der kandidater som er 50 år eller eldre fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben.index[-3:],
+            y=df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben.f0_[-3:],
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig.show()
+```
+```{python}
+#| title: Antall der kandidater med innsatsbehov fikk jobben
+
+colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben.index[-3:])
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben.index[-3:],
+            y=df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben.f0_[-3:],
             marker_color=colors,
         )
     ]
