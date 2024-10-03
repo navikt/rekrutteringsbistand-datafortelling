@@ -1376,6 +1376,8 @@ fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
 
+## Row
+
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én kandidat som er 50 år eller eldre fikk vist sin kontaktinfo
 
