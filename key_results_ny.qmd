@@ -1658,7 +1658,7 @@ fig.show()
 ```{python}
 #| title: Antall der kandidater i prioritert målgruppe fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben.index[-3:])
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1680,7 +1680,7 @@ fig.show()
 ```{python}
 #| title: Direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 
-colors = ['lightslategray',] * len(df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index[-3:])
+colors = ['#6c757d',] * len(df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1789,7 +1789,7 @@ fig.show()
 ```{python}
 #| title: Antall der kandidater med hull i CV fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben.index[-3:])
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1810,7 +1810,7 @@ fig.show()
 ```{python}
 #| title: Antall der kandidater under 30 år fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben.index[-3:])
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1831,7 +1831,7 @@ fig.show()
 ```{python}
 #| title: Antall der kandidater som er 50 år eller eldre fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben.index[-3:])
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben.index[-3:])
 
 fig = go.Figure(
     data=[
@@ -1852,7 +1852,7 @@ fig.show()
 ```{python}
 #| title: Antall der kandidater med innsatsbehov fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben.index[-3:])
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben.index[-3:])
 
 fig = go.Figure(
     data=[
