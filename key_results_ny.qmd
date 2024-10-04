@@ -1107,9 +1107,9 @@ De ulike innsatsbehov-gruppene som brukes i disse målingene her er:
 #| title: Andel der minst én i prioritert målgruppe fikk vist sin kontaktinfo per måned
 andel_vist_kontaktinfo_prioritert_målgruppe = df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
-colors = ['lightslategray',] * len(andel_vist_kontaktinfo_prioritert_målgruppe.index)
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#0d6efd',] * len(andel_vist_kontaktinfo_prioritert_målgruppe.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1134,10 +1134,10 @@ fig.show()
 #| title: Andel av stillingene hvor minst én kandidat i prioritert målgruppe fikk jobben
 andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
-colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1163,10 +1163,10 @@ fig.show()
 #| title: Andel av stillingene hvor minst én kandidat med hull i CV'en fikk jobben
 andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
-colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1191,10 +1191,10 @@ fig.show()
 #| title: Andel av stillingene hvor minst én kandidat under 30 år fikk jobben
 andel_stillinger_hvor_minst_en_under_30_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
-colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_under_30_fikk_jobben.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(andel_stillinger_hvor_minst_en_under_30_fikk_jobben.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1220,10 +1220,10 @@ fig.show()
 #| title: Andel av stillingene hvor minst én kandidat 50 år eller eldre fikk jobben
 andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
-colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1247,10 +1247,10 @@ fig.show()
 #| title: Andel av stillingene hvor minst én kandidat med innsatsbehov fikk jobben
 andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben = df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
-colors = ['lightslategray',] * len(andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1276,7 +1276,7 @@ fig.show()
 #| title: Andel direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat = df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned / df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned
 
-colors = ['lightslategray',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
+colors = ['#6c757d',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
 colors[-3] = 'crimson'
 colors[-2] = 'crimson'
 colors[-1] = 'crimson'
@@ -1303,9 +1303,9 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én i prioritert målgruppe fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1329,9 +1329,9 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én kandidat med hull i CV fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1354,9 +1354,9 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én kandidat under 30 år fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1381,9 +1381,9 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én kandidat som er 50 år eller eldre fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1406,9 +1406,9 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der minst én kandidat med innsatsbehov fikk vist sin kontaktinfo
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#0d6efd',] * len(df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1432,10 +1432,10 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater i prioritert målgruppe fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1458,7 +1458,7 @@ fig.show()
 ```{python}
 #| title: Antall direktemeldte stillinger hvor minst en kandidat fikk delt sin CV digitalt med arbeidsgiver
 
-colors = ['lightslategray',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
+colors = ['#6c757d',] * len(andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index)
 colors[-3] = 'crimson'
 colors[-2] = 'crimson'
 colors[-1] = 'crimson'
@@ -1485,10 +1485,10 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater med hull i CV fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1510,10 +1510,10 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater under 30 år fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1537,10 +1537,10 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater 50 år eller eldre fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
@@ -1562,10 +1562,10 @@ fig.show()
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater med innsatsbehov fikk jobben
 
-colors = ['lightslategray',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.index)
-colors[-3] = 'crimson'
-colors[-2] = 'crimson'
-colors[-1] = 'crimson'
+colors = ['#ffc107',] * len(df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.index)
+colors[-3] = 'lightslategray'
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
 
 fig = go.Figure(
     data=[
