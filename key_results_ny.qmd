@@ -1104,7 +1104,7 @@ De ulike innsatsbehov-gruppene som brukes i disse målingene her er:
 
 ## Row
 ```{python}
-#| title: Andel der minst én i prioritert målgruppe fikk vist sin kontaktinfo per måned
+#| title: Andel der minst én kandidat i prioritert målgruppe fikk vist sin kontaktinfo per måned
 andel_vist_kontaktinfo_prioritert_målgruppe = df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
 
 colors = ['#0d6efd',] * len(andel_vist_kontaktinfo_prioritert_målgruppe.index)
@@ -1116,6 +1116,116 @@ fig = go.Figure(
         go.Bar(
             x=andel_vist_kontaktinfo_prioritert_målgruppe.index,
             y=andel_vist_kontaktinfo_prioritert_målgruppe.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Andel der minst én kandidat med hull i CV fikk vist sin kontaktinfo per måned
+andel_vist_kontaktinfo_med_hull_i_CV = df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['#0d6efd',] * len(andel_vist_kontaktinfo_med_hull_i_CV.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_vist_kontaktinfo_med_hull_i_CV.index,
+            y=andel_vist_kontaktinfo_med_hull_i_CV.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+
+```{python}
+#| title: Andel der minst én kandidat under 30 år fikk vist sin kontaktinfo per måned
+andel_vist_kontaktinfo_under_30 = df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['#0d6efd',] * len(andel_vist_kontaktinfo_under_30.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_vist_kontaktinfo_under_30.index,
+            y=andel_vist_kontaktinfo_under_30.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+```{python}
+#| title: Andel der minst én kandidat 50 år eller eldre fikk vist sin kontaktinfo per måned
+andel_vist_kontaktinfo_50_eller_eldre = df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['#0d6efd',] * len(andel_vist_kontaktinfo_50_eller_eldre.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_vist_kontaktinfo_50_eller_eldre.index,
+            y=andel_vist_kontaktinfo_50_eller_eldre.antall_stillinger,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+
+```{python}
+#| title: Andel der minst én kandidat med innsatsbehov fikk vist sin kontaktinfo per måned
+andel_vist_kontaktinfo_med_innsatsbehov = df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned / df_antall_kandidatlister_tilknyttet_stilling_per_maaned
+
+colors = ['#0d6efd',] * len(andel_vist_kontaktinfo_med_innsatsbehov.index)
+colors[-2] = 'lightslategray'
+colors[-1] = 'lightslategray'
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_vist_kontaktinfo_med_innsatsbehov.index,
+            y=andel_vist_kontaktinfo_med_innsatsbehov.antall_stillinger,
             marker_color=colors,
         )
     ]
@@ -1480,7 +1590,7 @@ fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
 
-# Row
+## Row
 ```{python}
 #| title: Antall arbeidsgivers kandidatlister der kandidater under 30 år fikk jobben
 
@@ -1531,6 +1641,7 @@ fig = fig.update_layout(
 fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
+
 ## Row
 
 ```{python}
