@@ -23,3 +23,27 @@ query = f"""
 antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).result())[0]
 ```
 
+```{python}
+query = f"""
+    -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
+    with unik_kandidat_per_liste as (
+        select distinct aktorid, kandidatlisteid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
+        where utfall = 'PRESENTERT'
+    )
+    select count(*) from unik_kandidat_per_liste;
+    """
+antall_kandidater_presentert = next(bq_client.query(query=query).result())[0]
+```
+
+```{python}
+query = f"""
+    -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
+    with unik_kandidat_presentert_per_liste as (
+        select distinct aktorid, kandidatlisteid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
+        where utfall = 'PRESENTERT'
+    )
+    select count(*) from unik_kandidat_presentert_per_liste;
+    """
+antall_kandidater_presentert = next(bq_client.query(query=query).result())[0]
+```
+
