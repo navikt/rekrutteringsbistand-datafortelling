@@ -1,0 +1,25 @@
+# Presentert {orientation="rows" scrolling="true"}
+
+<span style="color:red;">
+NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
+</span>
+
+```{python}
+from google.cloud.bigquery import Client
+import plotly.graph_objects as go
+```
+
+```{python}
+project = "toi-prod-324e"
+bq_client = Client(project)
+```
+
+```{python}
+query = f"""
+    select count(distinct kandidatliste_id) 
+    from `rekrutteringsbistand_statistikk_pg15.kandidatliste`
+    where stilling_opprettet_tidspunkt is not null
+    """
+antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).result())[0]
+```
+
