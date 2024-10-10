@@ -1,0 +1,278 @@
+# Presentert {orientation="rows" scrolling="true"}
+
+<span style="color:red;">
+NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
+</span>
+
+```{python}
+from google.cloud.bigquery import Client
+import plotly.graph_objects as go
+```
+
+```{python}
+project = "toi-prod-324e"
+bq_client = Client(project)
+```
+
+```{python}
+query = f"""
+    select count(distinct kandidatliste_id) 
+    from `rekrutteringsbistand_statistikk_pg15.kandidatliste`
+    where stilling_opprettet_tidspunkt is not null
+    """
+antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).result())[0]
+```
+
+```{python}
+query = f"""
+    -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
+    with unik_kandidat_per_liste as (
+        select distinct aktorid, kandidatlisteid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
+        where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select count(*) from unik_kandidat_per_liste;
+    """
+antall_kandidater_totalt_presentert = next(bq_client.query(query=query).result())[0]
+```
+
+```{python}
+query = f"""
+    with unik_synlig_kandidat_presentert_per_liste as (
+        select distinct aktor_id, uuid from `rekrutteringsbistand_kandidat.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select count(*) from unik_synlig_kandidat_presentert_per_liste;
+    """
+antall_synlige_kandidater_presentert = next(bq_client.query(query=query).result())[0]
+```
+
+```{python}
+query = f"""
+    with unik_kandidat_delt_cv_per_liste as (
+        select distinct aktor_id, veilkandliste_db_id from `rekrutteringsbistand_kandidat.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        where sendt_til_arbeidsgivers_kandidatliste = true
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select count(*) from unik_kandidat_delt_cv_per_liste;
+    """
+antall_kandidater_cv_delt = next(bq_client.query(query=query).result())[0]
+```
+
+```{python}
+query = f"""
+    -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
+    with unik_kandidat_per_liste as (
+        select distinct aktorid, utfall, kandidatlisteid, tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
+        where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select 
+        format_datetime('%Y-%m', tidspunkt) as tidspunkt_utfallsendring_yearmonth, 
+        count(*) as antall_presenterte
+    from unik_kandidat_per_liste
+    group by tidspunkt_utfallsendring_yearmonth
+    order by tidspunkt_utfallsendring_yearmonth;
+    """
+df_antall_kandidater_totalt_presentert_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_utfallsendring_yearmonth')
+```
+
+```{python}
+query = f"""
+    with unik_kandidat_delt_cv_per_liste as (
+        select distinct aktor_id, veilkandliste_db_id, tidspunkt from `rekrutteringsbistand_kandidat.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        where sendt_til_arbeidsgivers_kandidatliste = true
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select 
+        format_datetime('%Y-%m', tidspunkt) as tidspunkt_utfallsendring_yearmonth,
+        count(*) as antall_presenterte
+    from unik_kandidat_delt_cv_per_liste
+    group by tidspunkt_utfallsendring_yearmonth
+    order by tidspunkt_utfallsendring_yearmonth;
+    """
+df_antall_kandidater_delt_cv_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_utfallsendring_yearmonth')
+```
+
+```{python}
+query = f"""
+    with unik_synlig_kandidat_presentert_per_liste as (
+        select distinct aktor_id, uuid, tidspunkt from `rekrutteringsbistand_kandidat.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select 
+        format_datetime('%Y-%m', tidspunkt) as tidspunkt_utfallsendring_yearmonth,
+        count(*) as antall_presenterte
+    from unik_synlig_kandidat_presentert_per_liste
+    group by tidspunkt_utfallsendring_yearmonth
+    order by tidspunkt_utfallsendring_yearmonth;
+    """
+df_antall_synlige_kandidater_presentert_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_utfallsendring_yearmonth')
+```
+
+## Row
+::: {.callout-note}
+## Beregninger
+Kun brukt data fra 11.mai 2022 kl 10:49 fordi det var først da man begynte å lagre deling av CV digitalt med arbeidsgiver i DB
+
+## Row
+
+```{python}
+#| component: valuebox
+#| title: Antall CV delt digitalt med arbeidsgiver
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(antall_kandidater_cv_delt)
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: Totalt antall presenterte (inkl. usynlige kandidater)
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(antall_kandidater_totalt_presentert)
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: Antall presenterte kandidater (eksl. usynlige kandidater)
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(antall_synlige_kandidater_presentert)
+)
+```
+
+## Row
+
+```{python}
+#| component: valuebox
+#| title: Andel av de presenterte kandidatene (synlige) som fikk delt sin CV med arbeidsgiver
+kandidater_delt_cv = antall_kandidater_cv_delt/antall_synlige_kandidater_presentert
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_delt_cv*100,1))+"%"
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: Andel av det totale antall presenterte kandidater som fikk delt sin CV med arbeidsgiver
+kandidater_delt_cv = antall_kandidater_cv_delt/antall_kandidater_totalt_presentert
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_delt_cv*100,1))+"%"
+)
+```
+
+## Row
+
+```{python}
+#| title: Andel av presenterte (kun synlige kandidater) som har fått delt CV digitalt med arbeidsgiver
+andel_delt_cv = df_antall_kandidater_delt_cv_per_maaned / df_antall_synlige_kandidater_presentert_per_maaned
+
+colors = ['#0d6efd',] * len(andel_delt_cv.index)
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_delt_cv.index,
+            y=andel_delt_cv.antall_presenterte,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+```{python}
+#| title: Andel av totalt antall presenterte som har fått delt CV digitalt med arbeidsgiver
+andel_presenterte = df_antall_kandidater_delt_cv_per_maaned / df_antall_kandidater_totalt_presentert_per_maaned
+
+colors = ['#0d6efd',] * len(andel_delt_cv.index)
+
+fig = go.Figure(
+    data=[
+        go.Bar(
+            x=andel_delt_cv.index,
+            y=andel_delt_cv.antall_presenterte,
+            marker_color=colors,
+        )
+    ]
+)
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="",
+    yaxis_tickformat = ',.0%',
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```
+
+## Row
+
+```{python}
+#| title: Andel av totalt antall presenterte som har fått delt CV digitalt med arbeidsgiver
+
+fig = go.Figure()
+
+fig.add_trace(
+    go.Scatter(
+        x=df_antall_kandidater_delt_cv_per_maaned.index,
+        y=df_antall_kandidater_delt_cv_per_maaned.antall_presenterte,
+        marker_color=['#0d6efd',] * len(df_antall_kandidater_delt_cv_per_maaned.index),
+        name="Antall kandidater som fikk delt sin CV med arbeidsgiver"
+    )
+)
+
+fig.add_trace(
+    go.Scatter(
+        x=df_antall_kandidater_totalt_presentert_per_maaned.index,
+        y=df_antall_kandidater_totalt_presentert_per_maaned.antall_presenterte,
+        marker_color=['#0d6efd',] * len(df_antall_kandidater_totalt_presentert_per_maaned.index),
+        name="Totalt antall kandidater som ble presentert"
+    )
+)
+
+fig.add_trace(
+    go.Scatter(
+        x=df_antall_synlige_kandidater_presentert_per_maaned.index,
+        y=df_antall_synlige_kandidater_presentert_per_maaned.antall_presenterte,
+        marker_color=['#0d6efd',] * len(df_antall_synlige_kandidater_presentert_per_maaned.index),
+        name="Antall synlige kandidater som ble presentert"
+    )
+)
+
+fig = fig.update_layout(
+    xaxis_title="",
+    yaxis_title="Antall",
+)
+
+fig = fig.update_xaxes(nticks=24)
+fig.show()
+```

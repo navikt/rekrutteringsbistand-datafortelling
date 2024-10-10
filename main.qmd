@@ -18,4 +18,6 @@ jupyter: python3
 
 {{< include key_results_ny.qmd >}}
 
+{{< include presentert.qmd >}}
+
 {{< include etterregistrering.qmd >}}
