@@ -159,6 +159,32 @@ dict(
 ## Row
 
 ```{python}
+#| component: valuebox
+#| title: Andel av de presenterte kandidatene (synlige) som fikk delt sin CV med arbeidsgiver
+kandidater_delt_cv = antall_kandidater_cv_delt/antall_synlige_kandidater_presentert
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_delt_cv*100,1))+"%"
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: Andel av det totale antall presenterte kandidater som fikk delt sin CV med arbeidsgiver
+kandidater_delt_cv = antall_kandidater_cv_delt/antall_kandidater_totalt_presentert
+
+dict(
+    icon = "check-circle",
+    color = "warning",
+    value = str(round(kandidater_delt_cv*100,1))+"%"
+)
+```
+
+## Row
+
+```{python}
 #| title: Andel av presenterte (kun synlige kandidater) som har fått delt CV digitalt med arbeidsgiver
 andel_delt_cv = df_antall_kandidater_delt_cv_per_maaned / df_antall_synlige_kandidater_presentert_per_maaned
 
@@ -207,6 +233,8 @@ fig = fig.update_layout(
 fig = fig.update_xaxes(nticks=24)
 fig.show()
 ```
+
+## Row
 
 ```{python}
 #| title: Andel av totalt antall presenterte som har fått delt CV digitalt med arbeidsgiver
