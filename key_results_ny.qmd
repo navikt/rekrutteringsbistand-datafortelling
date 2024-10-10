@@ -242,8 +242,8 @@ antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben = next(
 query = f"""
     with presentert_utfall as (
         select distinct kandidatlisteid, aktorid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
-        inner join `kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
-        inner join `kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
+        inner join `rekrutteringsbistand_kandidat.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
+        inner join `rekrutteringsbistand_kandidat.utfallsendring` u on u.veilkandidat_db_id = k.db_id
         where sendt_til_arbeidsgivers_kandidatliste = true
     )
     select count(distinct kandidatliste_id)
@@ -646,8 +646,8 @@ query = f"""
 
     with presentert_utfall as (
             select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
-            inner join `kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
-            inner join `kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
+            inner join `rekrutteringsbistand_kandidat.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
+            inner join `rekrutteringsbistand_kandidat.utfallsendring` u on u.veilkandidat_db_id = k.db_id
             where sendt_til_arbeidsgivers_kandidatliste = true
         )
         select 
@@ -926,8 +926,8 @@ df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben = bq
 query = f"""
     with presentert_utfall as (
         select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
-            inner join `kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
-            inner join `kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
+            inner join `rekrutteringsbistand_kandidat.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
+            inner join `rekrutteringsbistand_kandidat.utfallsendring` u on u.veilkandidat_db_id = k.db_id
             where sendt_til_arbeidsgivers_kandidatliste = true
     )
     select 
