@@ -28,11 +28,12 @@ query = f"""
     -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
     with unik_kandidat_per_liste as (
         select distinct aktorid, kandidatlisteid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
-        where utfall = 'PRESENTERT'
+        where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
     )
     select count(*) from unik_kandidat_per_liste;
     """
-antall_kandidater_presentert = next(bq_client.query(query=query).result())[0]
+antall_kandidater_totalt_presentert = next(bq_client.query(query=query).result())[0]
 ```
 
 ```{python}
@@ -41,6 +42,7 @@ query = f"""
         select distinct aktor_id, uuid from `kandidat_api.utfallsendring` u
         inner join `kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
         where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
     )
     select count(*) from unik_synlig_kandidat_presentert_per_liste;
     """
@@ -53,9 +55,63 @@ query = f"""
         select distinct aktor_id, veilkandliste_db_id from `kandidat_api.utfallsendring` u
         inner join `kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
         where sendt_til_arbeidsgivers_kandidatliste = true
+        and tidspunkt >= '2022-05-11T10:49:00'
     )
     select count(*) from unik_kandidat_delt_cv_per_liste;
     """
 antall_kandidater_cv_delt = next(bq_client.query(query=query).result())[0]
 ```
 
+```{python}
+query = f"""
+    -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
+    with unik_kandidat_per_liste as (
+        select distinct aktorid, utfall, kandidatlisteid, tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
+        where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select 
+        format_datetime('%Y-%m', tidspunkt) as tidspunkt_utfallsendring_yearmonth, 
+        count(*) 
+    from unik_kandidat_per_liste
+    group by tidspunkt_utfallsendring_yearmonth
+    order by tidspunkt_utfallsendring_yearmonth;
+    """
+antall_kandidater_totalt_presentert_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_utfallsendring_yearmonth')
+```
+
+```{python}
+query = f"""
+    with unik_kandidat_delt_cv_per_liste as (
+        select distinct aktor_id, veilkandliste_db_id, tidspunkt from `kandidat_api.utfallsendring` u
+        inner join `kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        where sendt_til_arbeidsgivers_kandidatliste = true
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select 
+        format_datetime('%Y-%m', tidspunkt) as tidspunkt_utfallsendring_yearmonth,
+        count(*) 
+    from unik_kandidat_delt_cv_per_liste
+    group by tidspunkt_utfallsendring_yearmonth
+    order by tidspunkt_utfallsendring_yearmonth;
+    """
+antall_kandidater_delt_cv_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_utfallsendring_yearmonth')
+```
+
+```{python}
+query = f"""
+    with unik_synlig_kandidat_presentert_per_liste as (
+        select distinct aktor_id, uuid, tidspunkt from `kandidat_api.utfallsendring` u
+        inner join `kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
+        and tidspunkt >= '2022-05-11T10:49:00'
+    )
+    select 
+        format_datetime('%Y-%m', tidspunkt) as tidspunkt_utfallsendring_yearmonth,
+        count(*) 
+    from unik_synlig_kandidat_presentert_per_liste
+    group by tidspunkt_utfallsendring_yearmonth
+    order by tidspunkt_utfallsendring_yearmonth;
+    """
+antall_synlige_kandidater_presentert_per_maaned = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_utfallsendring_yearmonth')
+```
