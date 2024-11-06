@@ -120,6 +120,7 @@ df_antall_synlige_kandidater_presentert_per_maaned = bq_client.query(query=query
 ::: {.callout-note}
 ## Beregninger
 Kun brukt data fra 11.mai 2022 kl 10:49 fordi det var først da man begynte å lagre deling av CV digitalt med arbeidsgiver i DB
+:::
 
 ## Row
 
