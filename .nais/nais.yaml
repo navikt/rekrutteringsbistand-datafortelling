@@ -23,7 +23,7 @@ spec:
         - host: {{ nada_host }}
   gcp:
     bigQueryDatasets:
-      - name: rekrutteringsbistand_kandidat
+      - name: rekrutteringsbistand_kandidat_pg15
         permission: READ
       - name: rekrutteringsbistand_statistikk_pg15
         permission: READ
