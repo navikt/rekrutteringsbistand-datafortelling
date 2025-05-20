@@ -951,6 +951,31 @@ query = f"""
 df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_stilling_opprettet_yearmonthday')
 ```
 
+```{python}
+query = f"""
+    with unike_stillingsannonser as (
+        select
+            distinct stilling_id,
+            antall_stillinger,
+            stillingskategori,
+            format_datetime('%Y-%m-%d', datetime(timestamp_micros(cast(opprettet_tidspunkt / 1000 as int64)))) as tidspunkt_kandidatliste_opprettet_yearmonthday
+        from `rekrutteringsbistand_kandidat_pg15.veilkandliste`
+        where stilling_id is not null
+    )
+    select
+    sum(antall_stillinger) as totalt_antall_stillinger,
+    tidspunkt_kandidatliste_opprettet_yearmonthday,
+    case
+        when stillingskategori is null or stillingskategori = 'STILLING' then 'STILLING'
+        else stillingskategori
+    end as justert_kategori
+    from unike_stillingsannonser
+    where tidspunkt_kandidatliste_opprettet_yearmonthday >= '2020-01-01'
+    group by justert_kategori, tidspunkt_kandidatliste_opprettet_yearmonthday;
+    """
+df_antall_stillinger_per_kategori = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_kandidatliste_opprettet_yearmonthday')
+```
+
 ## Row
 
 ```{python}
