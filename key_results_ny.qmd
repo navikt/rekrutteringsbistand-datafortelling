@@ -958,22 +958,22 @@ query = f"""
             distinct stilling_id,
             antall_stillinger,
             stillingskategori,
-            format_datetime('%Y-%m-%d', datetime(timestamp_micros(cast(opprettet_tidspunkt / 1000 as int64)))) as tidspunkt_kandidatliste_opprettet_yearmonthday
+            format_datetime('%Y-%m', datetime(timestamp_micros(cast(opprettet_tidspunkt / 1000 as int64)))) as tidspunkt_kandidatliste_opprettet_yearmonth
         from `rekrutteringsbistand_kandidat_pg15.veilkandliste`
         where stilling_id is not null
     )
     select
     sum(antall_stillinger) as totalt_antall_stillinger,
-    tidspunkt_kandidatliste_opprettet_yearmonthday,
+    tidspunkt_kandidatliste_opprettet_yearmonth,
     case
         when stillingskategori is null or stillingskategori = 'STILLING' then 'STILLING'
         else stillingskategori
     end as justert_kategori
     from unike_stillingsannonser
-    where tidspunkt_kandidatliste_opprettet_yearmonthday >= '2020-01-01'
-    group by justert_kategori, tidspunkt_kandidatliste_opprettet_yearmonthday;
+    where tidspunkt_kandidatliste_opprettet_yearmonth >= '2020-01'
+    group by justert_kategori, tidspunkt_kandidatliste_opprettet_yearmonth;
     """
-df_antall_stillinger_per_kategori = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_kandidatliste_opprettet_yearmonthday')
+df_antall_stillinger_per_kategori = bq_client.query(query=query).to_dataframe().set_index('tidspunkt_kandidatliste_opprettet_yearmonth')
 ```
 
 ## Row
@@ -1140,7 +1140,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_vist_kontaktinfo_prioritert_målgruppe.index,
-            y=andel_vist_kontaktinfo_prioritert_målgruppe.antall_stillinger,
+            y=andel_vist_kontaktinfo_prioritert_målgruppe.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1166,7 +1166,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_vist_kontaktinfo_med_hull_i_CV.index,
-            y=andel_vist_kontaktinfo_med_hull_i_CV.antall_stillinger,
+            y=andel_vist_kontaktinfo_med_hull_i_CV.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1195,7 +1195,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_vist_kontaktinfo_under_30.index,
-            y=andel_vist_kontaktinfo_under_30.antall_stillinger,
+            y=andel_vist_kontaktinfo_under_30.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1221,7 +1221,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_vist_kontaktinfo_50_eller_eldre.index,
-            y=andel_vist_kontaktinfo_50_eller_eldre.antall_stillinger,
+            y=andel_vist_kontaktinfo_50_eller_eldre.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1250,7 +1250,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_vist_kontaktinfo_med_innsatsbehov.index,
-            y=andel_vist_kontaktinfo_med_innsatsbehov.antall_stillinger,
+            y=andel_vist_kontaktinfo_med_innsatsbehov.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1278,7 +1278,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.index,
-            y=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.antall_stillinger,
+            y=andel_stillinger_hvor_minst_en_i_prioritert_målgruppe_fikk_jobben.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1307,7 +1307,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.index,
-            y=andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.antall_stillinger,
+            y=andel_stillinger_hvor_minst_en_med_hull_i_CV_fikk_jobben.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1335,7 +1335,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_stillinger_hvor_minst_en_under_30_fikk_jobben.index,
-            y=andel_stillinger_hvor_minst_en_under_30_fikk_jobben.antall_stillinger,
+            y=andel_stillinger_hvor_minst_en_under_30_fikk_jobben.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1364,7 +1364,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.index,
-            y=andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.antall_stillinger,
+            y=andel_stillinger_hvor_minst_en_50_eller_eldre_fikk_jobben.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1391,7 +1391,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.index,
-            y=andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.antall_stillinger,
+            y=andel_stillinger_hvor_minst_en_med_innsatsbehov_fikk_jobben.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1420,7 +1420,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.index,
-            y=andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.antall_stillinger,
+            y=andel_direktemeldte_stillinger_med_minst_en_presentert_kandidat.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1446,7 +1446,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
-            y=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1472,7 +1472,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
-            y=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_hull_i_cv_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1497,7 +1497,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
-            y=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1524,7 +1524,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
-            y=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1549,7 +1549,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.index,
-            y=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_sin_kontaktinfo_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1576,7 +1576,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.index,
-            y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1601,7 +1601,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.index,
-            y=df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1628,7 +1628,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.index,
-            y=df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1653,7 +1653,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.index,
-            y=df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1681,7 +1681,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.index,
-            y=df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1706,7 +1706,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.index,
-            y=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.antall_stillinger,
+            y=df_antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1730,7 +1730,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_tilknyttet_stilling_per_maaned.index,
-            y=df_antall_kandidatlister_tilknyttet_stilling_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_tilknyttet_stilling_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -1753,7 +1753,7 @@ fig = go.Figure(
     data=[
         go.Bar(
             x=df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned.index,
-            y=df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned.antall_stillinger,
+            y=df_antall_kandidatlister_tilknyttet_direktemeldt_stilling_per_maaned.antall_stillingsannonser,
             marker_color=colors,
         )
     ]
@@ -2005,3 +2005,6 @@ fig = fig.update_layout(
 
 fig.show()
 ```
+
+## Row
+
