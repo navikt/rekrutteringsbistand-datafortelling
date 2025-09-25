@@ -21,9 +21,9 @@ query = f"""
         FORMAT_DATETIME('%Y-%m', u.tidspunkt) as tidspunkt_utfall_yearmonth,
         vk.stillingskategori,
         count(*) as antall
-    from `rekrutteringsbistand_kandidat.utfallsendring` u
-        inner join `rekrutteringsbistand_kandidat.veilkandidat` v on u.veilkandidat_db_id = v.db_id
-        inner join `rekrutteringsbistand_kandidat.veilkandliste` vk on v.veilkandliste_db_id = vk.db_id
+    from `rekrutteringsbistand_kandidat_pg15.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` v on u.veilkandidat_db_id = v.db_id
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandliste` vk on v.veilkandliste_db_id = vk.db_id
     where u.nytt_utfall = 'FATT_JOBBEN'
         and vk.stillingskategori IN ('STILLING', 'FORMIDLING')
     group by tidspunkt_utfall_yearmonth, vk.stillingskategori
@@ -38,8 +38,8 @@ query = f"""
         FORMAT_DATETIME('%Y-%m', DATE(TIMESTAMP_MILLIS(CAST(lagt_til_tidspunkt/1000000 AS INT64)))) as tidspunkt_utfall_yearmonth,
         vk.stillingskategori,
         count(*) as antall
-    from `rekrutteringsbistand_kandidat.formidlingavusynligkandidat` fk
-        inner join `rekrutteringsbistand_kandidat.veilkandliste` vk on fk.veilkandliste_db_id = vk.db_id
+    from `rekrutteringsbistand_kandidat_pg15.formidlingavusynligkandidat` fk
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandliste` vk on fk.veilkandliste_db_id = vk.db_id
     where fk.utfall = 'FATT_JOBBEN'
         and vk.stillingskategori IN ('STILLING', 'FORMIDLING')
     group by tidspunkt_utfall_yearmonth, vk.stillingskategori
@@ -193,7 +193,7 @@ query = f"""
         navkontor,
         count(*) as antall
     from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` u
-        inner join `rekrutteringsbistand_kandidat.veilkandliste` l on u.stillingsid = l.stilling_id
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandliste` l on u.stillingsid = l.stilling_id
     where u.utfall = 'FATT_JOBBEN'
         and l.stillingskategori IN ('STILLING', 'FORMIDLING')
         and tidspunkt >= '2024-01-01'
