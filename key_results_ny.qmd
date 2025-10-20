@@ -959,7 +959,7 @@ query = f"""
             antall_stillinger,
             stillingskategori,
             format_datetime('%Y-%m', datetime(timestamp_micros(cast(opprettet_tidspunkt / 1000 as int64)))) as tidspunkt_kandidatliste_opprettet_yearmonth
-        from `rekrutteringsbistand_kandidat_pg15_pg15.veilkandliste`
+        from `rekrutteringsbistand_kandidat_pg15.veilkandliste`
         where stilling_id is not null
     )
     select
