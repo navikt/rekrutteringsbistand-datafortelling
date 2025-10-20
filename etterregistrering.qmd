@@ -35,7 +35,7 @@ df_synlige = bq_client.query(query=query).to_dataframe()
 ```{python}
 query = f"""
     select
-        FORMAT_DATETIME('%Y-%m', DATE(TIMESTAMP_MILLIS(CAST(lagt_til_tidspunkt/1000000 AS INT64)))) as tidspunkt_utfall_yearmonth,
+        FORMAT_DATETIME('%Y-%m', lagt_til_tidspunkt) as tidspunkt_utfall_yearmonth,
         vk.stillingskategori,
         count(*) as antall
     from `rekrutteringsbistand_kandidat_pg15.formidlingavusynligkandidat` fk
