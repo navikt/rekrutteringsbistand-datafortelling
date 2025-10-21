@@ -7,8 +7,6 @@ NB! Dette er ikke offisiell statistikk og må ikke deles utenfor NAV.
 ```{python}
 from google.cloud.bigquery import Client
 import plotly.graph_objects as go
-import logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 ```
 
 ```{python}
@@ -30,8 +28,6 @@ query = f"""
         (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
     );
     """
-
-logging.info("Kjører query for å finne antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo")
 antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
 ```
 
