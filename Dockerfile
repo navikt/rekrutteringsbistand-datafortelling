@@ -7,7 +7,7 @@ RUN apk add --update jq curl
 WORKDIR /quarto
 
 RUN adduser -D -h /quarto/ -u 1069 -s /bin/bash quarto && \
-    chown -R quarto:quarto /quarto/ && chown -R quarto:quarto /opt/venv
+    chown -R quarto:quarto /quarto/
 
 RUN QUARTO_VERSION=$(curl https://api.github.com/repos/quarto-dev/quarto-cli/releases/latest | jq '.tag_name' | sed -e 's/[\"v]//g') && \
 wget https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.tar.gz && \
@@ -23,8 +23,8 @@ USER quarto
 #COPY --chown=python:python --from=compile-image quarto-dist/ quarto-dist/
 #RUN ln -s /quarto/quarto-dist/bin/quarto /usr/local/bin/quarto
 
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+#RUN python3 -m venv /opt/venv
+#ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
