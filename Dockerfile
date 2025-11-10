@@ -20,8 +20,7 @@ rm -rf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz
 #FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13 AS runner-image
 
 USER quarto
-#
-COPY --chown=quarto:quarto --from=compile-image /opt/venv /opt/venv
+run chown -R quarto:quarto /opt/venv
 #COPY --chown=python:python --from=compile-image quarto-dist/ quarto-dist/
 #RUN ln -s /quarto/quarto-dist/bin/quarto /usr/local/bin/quarto
 
