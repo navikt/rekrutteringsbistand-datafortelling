@@ -5,11 +5,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-RUN apt-get update && apt-get install -yq --no-install-recommends \
+RUN apk update && apk add --no-cache \
     curl \
+    wget \
     jq && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apk/lists/*
 RUN QUARTO_VERSION=$(curl https://api.github.com/repos/quarto-dev/quarto-cli/releases/latest | jq '.tag_name' | sed -e 's/[\"v]//g') && \
 wget https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.tar.gz && \
 tar -xvzf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz && \
@@ -19,13 +19,12 @@ rm -rf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz
 
 FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13 AS runner-image
 
-RUN apt-get update && apt-get install -yq --no-install-recommends \
+RUN apk update && apk add --no-cache \
     curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apk/lists/*
 
-RUN groupadd -g 1069 python && \
-    useradd -r -u 1069 -g python python
+RUN addgroup -g 1069 python && \
+    adduser -D -u 1069 -G python python
 
 WORKDIR /quarto
 COPY --chown=python:python --from=compile-image /opt/venv /opt/venv
