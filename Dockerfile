@@ -1,4 +1,4 @@
-FROM python:3.13 AS compile-image
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13-dev AS compile-image
 
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
@@ -17,7 +17,7 @@ ln -s quarto-${QUARTO_VERSION} quarto-dist && \
 rm -rf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz
 
 
-FROM python:3.13-slim AS runner-image
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13 AS runner-image
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     curl && \
