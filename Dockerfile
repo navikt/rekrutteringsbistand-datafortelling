@@ -6,7 +6,7 @@ RUN apk add --update jq curl
 
 WORKDIR /quarto
 
-RUN adduser -m -d /quarto/ -u 1069 -s /bin/bash quarto && \
+RUN adduser -D -h /quarto/ -u 1069 -s /bin/bash quarto && \
     chown -R quarto:quarto /quarto/
 
 RUN QUARTO_VERSION=$(curl https://api.github.com/repos/quarto-dev/quarto-cli/releases/latest | jq '.tag_name' | sed -e 's/[\"v]//g') && \
