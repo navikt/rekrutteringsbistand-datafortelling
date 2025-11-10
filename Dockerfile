@@ -1,3 +1,4 @@
+FROM gcr.io/distroless/cc AS cc
 FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13-dev AS compile-image
 
 USER root
