@@ -1,4 +1,3 @@
-FROM gcr.io/distroless/cc AS cc
 FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13-dev AS compile-image
 
 USER root
@@ -17,29 +16,11 @@ tar -xvzf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz && \
     mv quarto-${QUARTO_VERSION}/share /usr/local/share/ && \
 rm -rf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz
 
-
-#FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13 AS runner-image
-
 USER quarto
-#COPY --chown=python:python --from=compile-image quarto-dist/ quarto-dist/
-#RUN ln -s /quarto/quarto-dist/bin/quarto /usr/local/bin/quarto
 
-#RUN python3 -m venv /opt/venv
-#ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-#ENV PATH="/opt/venv/bin:$PATH"
-#RUN python3 -m venv /opt/venv
-
 COPY *.qmd .
-
-#RUN chown python:python /quarto -R
-#
-#ENV DENO_DIR=/quarto/deno
-#ENV XDG_CACHE_HOME=/quarto/cache
-#ENV XDG_DATA_HOME=/quarto/share
-#
-#USER 1069
 
 ENTRYPOINT ["./run.sh"]
