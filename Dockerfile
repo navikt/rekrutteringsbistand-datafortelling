@@ -1,4 +1,4 @@
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13-dev as compile-image
 
 USER root
 RUN apk add --update jq curl
@@ -15,6 +15,8 @@ tar -xvzf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz && \
     mv quarto-${QUARTO_VERSION}/bin/* /usr/local/bin && \
     mv quarto-${QUARTO_VERSION}/share /usr/local/share/ && \
 rm -rf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz
+
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13 AS runner
 
 USER quarto
 
