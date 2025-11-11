@@ -5,6 +5,7 @@ USER root
 RUN apk add --update jq curl
 
 WORKDIR /quarto
+COPY run.sh .
 
 RUN adduser -D -h /quarto/ -u 1069 -s /bin/bash quarto && \
     chown -R quarto:quarto /quarto/ && chmod +x run.sh
@@ -31,7 +32,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 #ENV PATH="/opt/venv/bin:$PATH"
 #RUN python3 -m venv /opt/venv
 
-COPY run.sh .
 COPY *.qmd .
 
 #RUN chown python:python /quarto -R
