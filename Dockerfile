@@ -1,6 +1,5 @@
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13-dev as compile-image
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13-dev AS compile-image
 
-USER root
 RUN apk add --update jq curl
 
 WORKDIR /quarto
@@ -18,7 +17,9 @@ rm -rf quarto-${QUARTO_VERSION}-linux-amd64.tar.gz
 
 FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/python:3.13 AS runner
 
-USER quarto
+COPY --chown=python:python --from=compile-image /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN python3 -m venv /opt/venv
 
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
