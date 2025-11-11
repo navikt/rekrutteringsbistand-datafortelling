@@ -7,7 +7,7 @@ RUN apk add --update jq curl
 WORKDIR /quarto
 
 RUN adduser -D -h /quarto/ -u 1069 -s /bin/bash quarto && \
-    chown -R quarto:quarto /quarto/
+    chown -R quarto:quarto /quarto/ && chmod +x run.sh
 
 RUN QUARTO_VERSION=$(curl https://api.github.com/repos/quarto-dev/quarto-cli/releases/latest | jq '.tag_name' | sed -e 's/[\"v]//g') && \
 wget https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.tar.gz && \
@@ -42,5 +42,4 @@ COPY *.qmd .
 #
 #USER 1069
 
-RUN chmod +x run.sh
 ENTRYPOINT ["./run.sh"]
