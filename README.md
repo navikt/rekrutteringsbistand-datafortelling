@@ -4,9 +4,11 @@
 
 ### Pre requisites
 
-Installer [python3.13 ](https://www.python.org/downloads/).
+Installer [python3.14 ](https://www.python.org/downloads/).
 
-Opprett et virtuelt pythonmiljø i root til prosjektet: `python3.13 -m venv .venv`.
+Det kan være fint å bruke en versjonsmanager som pyenv for å kunne håndtere flere pythonversjoner.
+
+Opprett et virtuelt pythonmiljø i root til prosjektet: `python3.14 -m venv .venv`.
 
 Aktiver det virtuelle miljøet: `source .venv/bin/activate`.
 
