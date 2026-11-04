@@ -16,13 +16,13 @@ bq_client = Client(project)
 
 ```{python}
 query = f"""
-    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -38,13 +38,13 @@ antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faat
 
 ```{python}
 query = f"""
-    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -55,13 +55,13 @@ antall_kandidatlister_med_minst_en_kandidat_med_hull_i_CV_som_har_faatt_vist_sin
 ```
 ```{python}
 query = f"""
-    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -72,13 +72,13 @@ antall_kandidatlister_med_minst_en_kandidat_under_30_som_har_faatt_vist_sin_kont
 ```
 ```{python}
 query = f"""
-    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -89,13 +89,13 @@ antall_kandidatlister_med_minst_en_kandidat_50_eller_eldre_som_har_faatt_vist_si
 ```
 ```{python}
 query = f"""
-    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    select count(distinct stilling_id) as antall_stillingsannonser from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -108,8 +108,8 @@ antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vist_
 # Det gjelder kandidatlister tilknyttet både eksterne og direktemeldte stillinger
 query = f"""
     select count(distinct kandidatliste_id) 
-    from `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
-        inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    from `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
+        inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
             on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and stilling_opprettet_tidspunkt is not null
@@ -121,19 +121,19 @@ antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).re
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -148,19 +148,19 @@ antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben 
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -171,19 +171,19 @@ antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben = next(bq_
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -194,19 +194,19 @@ antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben = next(bq_clien
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -217,19 +217,19 @@ antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben = next(bq
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -241,16 +241,16 @@ antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben = next(
 ```{python}
 query = f"""
     with presentert_utfall as (
-        select distinct kandidatlisteid, aktorid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
-        inner join `rekrutteringsbistand_kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
-        inner join `rekrutteringsbistand_kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
+        select distinct kandidatlisteid, aktorid from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
+        inner join `rekrutteringsbistand_kandidat_pg15.utfallsendring` u on u.veilkandidat_db_id = k.db_id
         where sendt_til_arbeidsgivers_kandidatliste = true
     )
     select count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join presentert_utfall
                         on presentert_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.er_direktemeldt is true 
         and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -262,7 +262,7 @@ antall_direktemeldte_stillinger_med_minst_en_presentert_kandidat = next(bq_clien
 ```{python}
 query = f"""
     select count(unike_kandidatlister.kandidatliste_id) from (
-        select distinct kandidatliste_id from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        select distinct kandidatliste_id from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             where er_direktemeldt is true and stilling_opprettet_tidspunkt is not null
     ) as unike_kandidatlister
     """
@@ -279,13 +279,13 @@ query = f"""
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillingsannonser
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
         on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -315,13 +315,13 @@ query = f"""
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillingsannonser
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
         on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -347,13 +347,13 @@ query = f"""
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillingsannonser
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
         on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -379,13 +379,13 @@ query = f"""
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillingsannonser
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
         on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -411,13 +411,13 @@ query = f"""
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillingsannonser
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
         on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
     and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -441,8 +441,8 @@ query = f"""
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillingsannonser
-    from `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    from `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
         and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -460,21 +460,21 @@ query = f"""
 
     
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
         format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
         count(distinct kandidatliste_id) as antall_stillingsannonser
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
@@ -500,21 +500,21 @@ query = f"""
 
     
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
         format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
         count(distinct kandidatliste_id) as antall_stillingsannonser
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
@@ -536,21 +536,21 @@ query = f"""
 
     
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
         format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
         count(distinct kandidatliste_id) as antall_stillingsannonser
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
@@ -572,21 +572,21 @@ query = f"""
 
     
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
         format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
         count(distinct kandidatliste_id) as antall_stillingsannonser
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
@@ -608,21 +608,21 @@ query = f"""
 
     
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
         format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
         count(distinct kandidatliste_id) as antall_stillingsannonser
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
@@ -645,18 +645,18 @@ query = f"""
 
 
     with presentert_utfall as (
-            select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
-            inner join `rekrutteringsbistand_kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
-            inner join `rekrutteringsbistand_kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
+            select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
+            inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
+            inner join `rekrutteringsbistand_kandidat_pg15.utfallsendring` u on u.veilkandidat_db_id = k.db_id
             where sendt_til_arbeidsgivers_kandidatliste = true
         )
         select 
             format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
             count(distinct kandidatliste_id) as antall_stillingsannonser
-        from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                     inner join presentert_utfall
                     on presentert_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                     on kandidatliste.stillings_id = stilling.uuid
         where kandidatliste.stilling_opprettet_tidspunkt is not null
             and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
@@ -679,8 +679,8 @@ query = f"""
     select
     format_datetime('%Y-%m', kandidatliste.stilling_opprettet_tidspunkt) as tidspunkt_stilling_opprettet_yearmonth,
     count(distinct stillings_id) as antall_stillingsannonser
-    from `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
-    inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+    from `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
+    inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
         on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.er_direktemeldt is true
         and kandidatliste.stilling_opprettet_tidspunkt >= '2023-03-01'
@@ -697,10 +697,10 @@ query = f"""
     select 
     format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
     count(distinct stilling_id) 
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
     where (
@@ -718,10 +718,10 @@ query = f"""
     select 
     format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
     count(distinct stilling_id) 
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
     where hull_i_cv is true
@@ -735,10 +735,10 @@ query = f"""
     select 
     format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
     count(distinct stilling_id) 
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
     where alder < 30
@@ -752,10 +752,10 @@ query = f"""
     select 
     format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
     count(distinct stilling_id) 
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
     where alder >= 50
@@ -769,10 +769,10 @@ query = f"""
     select 
     format_datetime('%Y-%m-%d', visning_kontaktinfo.tidspunkt) as tidspunkt_visning_kontaktinfo_yearmonthday,
     count(distinct stilling_id) 
-    from `rekrutteringsbistand_statistikk_pg15.visning_kontaktinfo` as visning_kontaktinfo
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from `rekrutteringsbistand_statistikk_api.visning_kontaktinfo` as visning_kontaktinfo
+    inner join `rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             on kandidatliste.stillings_id = visning_kontaktinfo.stilling_id
-    inner join `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
+    inner join `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
         on visning_kontaktinfo.stilling_id = kandidatutfall.stillingsid
         and visning_kontaktinfo.aktor_id = kandidatutfall.aktorid
     where innsatsbehov in ('VARIG', 'BATT', 'BFORM')
@@ -785,21 +785,21 @@ df_antall_kandidatlister_med_minst_en_kandidat_med_innsatsbehov_som_har_faatt_vi
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
     format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
     count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -816,21 +816,21 @@ df_antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobb
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
     format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
     count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -843,21 +843,21 @@ df_antall_kandidatlister_der_minst_en_kandidat_med_hull_i_CV_fikk_jobben = bq_cl
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
     format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
     count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -870,21 +870,21 @@ df_antall_kandidatlister_der_minst_en_kandidat_under_30_fikk_jobben = bq_client.
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
     format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
     count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -897,21 +897,21 @@ df_antall_kandidatlister_der_minst_en_kandidat_50_eller_eldre_fikk_jobben = bq_c
 ```{python}
 query = f"""
     with id_siste_utfall_per_kandidat_per_liste as (
-        select max(id) from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select max(id) from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         group by aktorid, kandidatlisteid
     ),
     faatt_jobben_utfall as (
-        select * from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall 
+        select * from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall 
         where id in (select * from id_siste_utfall_per_kandidat_per_liste)
         and utfall = 'FATT_JOBBEN'
     )
     select 
     format_datetime('%Y-%m-%d', kandidatliste.tidspunkt_for_hendelsen) as tidspunkt_faatt_jobben_yearmonthday,
     count(distinct kandidatliste_id)
-    from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+    from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
                 inner join faatt_jobben_utfall
                 on faatt_jobben_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-                inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+                inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
     where kandidatliste.stilling_opprettet_tidspunkt is not null
         and (stilling.stillingskategori = 'STILLING' or stilling.stillingskategori is null)
@@ -925,9 +925,9 @@ df_antall_kandidatlister_der_minst_en_kandidat_med_innsatsbehov_fikk_jobben = bq
 ```{python}
 query = f"""
     with presentert_utfall as (
-        select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` as kandidatutfall
-            inner join `rekrutteringsbistand_kandidat_api.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
-            inner join `rekrutteringsbistand_kandidat_api.utfallsendring` u on u.veilkandidat_db_id = k.db_id
+        select distinct kandidatutfall.kandidatlisteid, kandidatutfall.aktorid, kandidatutfall.tidspunkt from `rekrutteringsbistand_statistikk_api.kandidatutfall` as kandidatutfall
+            inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` k on k.aktor_id = kandidatutfall.aktorid
+            inner join `rekrutteringsbistand_kandidat_pg15.utfallsendring` u on u.veilkandidat_db_id = k.db_id
             where sendt_til_arbeidsgivers_kandidatliste = true
     )
     select 
@@ -935,10 +935,10 @@ query = f"""
         count(unike_kandidatlister.kandidatliste_id)
     from (
         select distinct kandidatliste_id, stilling_opprettet_tidspunkt
-        from`rekrutteringsbistand_statistikk_pg15.kandidatliste` as kandidatliste
+        from`rekrutteringsbistand_statistikk_api.kandidatliste` as kandidatliste
             inner join presentert_utfall
                 on presentert_utfall.kandidatlisteid = kandidatliste.kandidatliste_id
-            inner join `rekrutteringsbistand_statistikk_pg15.stilling` as stilling
+            inner join `rekrutteringsbistand_statistikk_api.stilling` as stilling
                 on kandidatliste.stillings_id = stilling.uuid
         where kandidatliste.er_direktemeldt is true
             and kandidatliste.stilling_opprettet_tidspunkt is not null
@@ -959,7 +959,7 @@ query = f"""
             antall_stillinger,
             stillingskategori,
             format_datetime('%Y-%m', opprettet_tidspunkt) as tidspunkt_kandidatliste_opprettet_yearmonth
-        from `rekrutteringsbistand_kandidat_api.veilkandliste`
+        from `rekrutteringsbistand_kandidat_pg15.veilkandliste`
         where stilling_id is not null
     )
     select

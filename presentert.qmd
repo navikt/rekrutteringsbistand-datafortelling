@@ -17,7 +17,7 @@ bq_client = Client(project)
 ```{python}
 query = f"""
     select count(distinct kandidatliste_id) 
-    from `rekrutteringsbistand_statistikk_pg15.kandidatliste`
+    from `rekrutteringsbistand_statistikk_api.kandidatliste`
     where stilling_opprettet_tidspunkt is not null
     """
 antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).result())[0]
@@ -27,7 +27,7 @@ antall_kandidatlister_tilknyttet_stilling = next(bq_client.query(query=query).re
 query = f"""
     -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
     with unik_kandidat_per_liste as (
-        select distinct aktorid, kandidatlisteid from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
+        select distinct aktorid, kandidatlisteid from `rekrutteringsbistand_statistikk_api.kandidatutfall` 
         where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
         and tidspunkt >= '2022-05-11T10:49:00'
     )
@@ -39,8 +39,8 @@ antall_kandidater_totalt_presentert = next(bq_client.query(query=query).result()
 ```{python}
 query = f"""
     with unik_synlig_kandidat_presentert_per_liste as (
-        select distinct aktor_id, uuid from `rekrutteringsbistand_kandidat_api.utfallsendring` u
-        inner join `rekrutteringsbistand_kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        select distinct aktor_id, uuid from `rekrutteringsbistand_kandidat_pg15.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` k on k.db_id = u.veilkandidat_db_id
         where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
         and tidspunkt >= '2022-05-11T10:49:00'
     )
@@ -52,8 +52,8 @@ antall_synlige_kandidater_presentert = next(bq_client.query(query=query).result(
 ```{python}
 query = f"""
     with unik_kandidat_delt_cv_per_liste as (
-        select distinct aktor_id, veilkandliste_db_id from `rekrutteringsbistand_kandidat_api.utfallsendring` u
-        inner join `rekrutteringsbistand_kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        select distinct aktor_id, veilkandliste_db_id from `rekrutteringsbistand_kandidat_pg15.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` k on k.db_id = u.veilkandidat_db_id
         where sendt_til_arbeidsgivers_kandidatliste = true
         and tidspunkt >= '2022-05-11T10:49:00'
     )
@@ -66,7 +66,7 @@ antall_kandidater_cv_delt = next(bq_client.query(query=query).result())[0]
 query = f"""
     -- En kandidat kan ha utfall presentert på flere lister, og vil da bli telt en gang for hver liste hen har fått status presentert
     with unik_kandidat_per_liste as (
-        select distinct aktorid, utfall, kandidatlisteid, tidspunkt from `rekrutteringsbistand_statistikk_pg15.kandidatutfall` 
+        select distinct aktorid, utfall, kandidatlisteid, tidspunkt from `rekrutteringsbistand_statistikk_api.kandidatutfall` 
         where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
         and tidspunkt >= '2022-05-11T10:49:00'
     )
@@ -83,8 +83,8 @@ df_antall_kandidater_totalt_presentert_per_maaned = bq_client.query(query=query)
 ```{python}
 query = f"""
     with unik_kandidat_delt_cv_per_liste as (
-        select distinct aktor_id, veilkandliste_db_id, tidspunkt from `rekrutteringsbistand_kandidat_api.utfallsendring` u
-        inner join `rekrutteringsbistand_kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        select distinct aktor_id, veilkandliste_db_id, tidspunkt from `rekrutteringsbistand_kandidat_pg15.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` k on k.db_id = u.veilkandidat_db_id
         where sendt_til_arbeidsgivers_kandidatliste = true
         and tidspunkt >= '2022-05-11T10:49:00'
     )
@@ -101,8 +101,8 @@ df_antall_kandidater_delt_cv_per_maaned = bq_client.query(query=query).to_datafr
 ```{python}
 query = f"""
     with unik_synlig_kandidat_presentert_per_liste as (
-        select distinct aktor_id, uuid, tidspunkt from `rekrutteringsbistand_kandidat_api.utfallsendring` u
-        inner join `rekrutteringsbistand_kandidat_api.veilkandidat` k on k.db_id = u.veilkandidat_db_id
+        select distinct aktor_id, uuid, tidspunkt from `rekrutteringsbistand_kandidat_pg15.utfallsendring` u
+        inner join `rekrutteringsbistand_kandidat_pg15.veilkandidat` k on k.db_id = u.veilkandidat_db_id
         where (utfall = 'PRESENTERT' or utfall = 'FAATT_JOBBEN')
         and tidspunkt >= '2022-05-11T10:49:00'
     )
