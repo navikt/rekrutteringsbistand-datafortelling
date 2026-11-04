@@ -25,7 +25,7 @@ query = f"""
     where (
         (alder < 30 or alder > 49) or
         (hull_i_cv is true) or
-        (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+        (innsatsbehov in ('BATT', 'BFORM', 'VARIG', 'SPESIELT_TILPASSET_INNSATS', 'SITUASJONSBESTEMT_INNSATS', 'VARIG_TILPASSET_INNSATS', 'GRADERT_VARIG_TILPASSET_INNSATS'))
     );
     """
 antall_kandidatlister_med_minst_en_kandidat_i_prioritert_maalgruppe_som_har_faatt_vist_sin_kontaktinfo = next(bq_client.query(query=query).result())[0]
@@ -62,7 +62,7 @@ query = f"""
         and (
             (faatt_jobben_utfall.alder < 30 or faatt_jobben_utfall.alder > 49) or 
             (faatt_jobben_utfall.hull_i_cv is true) or 
-            (faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+            (faatt_jobben_utfall.innsatsbehov in ('BATT', 'BFORM', 'VARIG', 'SPESIELT_TILPASSET_INNSATS', 'SITUASJONSBESTEMT_INNSATS', 'VARIG_TILPASSET_INNSATS', 'GRADERT_VARIG_TILPASSET_INNSATS'))
         )
     """
 antall_kandidatlister_der_minst_en_kandidat_i_prioritert_maalgruppe_fikk_jobben = next(bq_client.query(query=query).result())[0]
@@ -117,7 +117,7 @@ query = f"""
         and (
             (alder < 30 or alder > 49) or
             (hull_i_cv is true) or
-            (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+            (innsatsbehov in ('BATT', 'BFORM', 'VARIG', 'SPESIELT_TILPASSET_INNSATS', 'SITUASJONSBESTEMT_INNSATS', 'VARIG_TILPASSET_INNSATS', 'GRADERT_VARIG_TILPASSET_INNSATS'))
         )
     group by tidspunkt_visning_kontaktinfo_yearmonth
     order by tidspunkt_visning_kontaktinfo_yearmonth;
@@ -166,7 +166,7 @@ query = f"""
         and (
             (faatt_jobben_utfall.alder < 30 or faatt_jobben_utfall.alder > 49) or 
             (faatt_jobben_utfall.hull_i_cv is true) or 
-            (faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+            (faatt_jobben_utfall.innsatsbehov in ('BATT', 'BFORM', 'VARIG', 'SPESIELT_TILPASSET_INNSATS', 'SITUASJONSBESTEMT_INNSATS', 'VARIG_TILPASSET_INNSATS', 'GRADERT_VARIG_TILPASSET_INNSATS'))
         )
     group by tidspunkt_stilling_opprettet_yearmonth
     order by tidspunkt_stilling_opprettet_yearmonth;
@@ -236,7 +236,7 @@ query = f"""
     where (
         (alder < 30 or alder > 49) or
         (hull_i_cv is true) or
-        (innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+        (innsatsbehov in ('BATT', 'BFORM', 'VARIG', 'SPESIELT_TILPASSET_INNSATS', 'SITUASJONSBESTEMT_INNSATS', 'VARIG_TILPASSET_INNSATS', 'GRADERT_VARIG_TILPASSET_INNSATS'))
     )
     group by tidspunkt_visning_kontaktinfo_yearmonthday
     order by tidspunkt_visning_kontaktinfo_yearmonthday;
@@ -268,7 +268,7 @@ query = f"""
         and (
             (faatt_jobben_utfall.alder < 30 or faatt_jobben_utfall.alder > 49) or 
             (faatt_jobben_utfall.hull_i_cv is true) or 
-            (faatt_jobben_utfall.innsatsbehov in ('VARIG', 'BATT', 'BFORM'))
+            (faatt_jobben_utfall.innsatsbehov in ('BATT', 'BFORM', 'VARIG', 'SPESIELT_TILPASSET_INNSATS', 'SITUASJONSBESTEMT_INNSATS', 'VARIG_TILPASSET_INNSATS', 'GRADERT_VARIG_TILPASSET_INNSATS'))
         )
     group by tidspunkt_faatt_jobben_yearmonthday
     order by tidspunkt_faatt_jobben_yearmonthday;
