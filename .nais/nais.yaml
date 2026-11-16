@@ -21,6 +21,8 @@ spec:
     outbound:
       external:
         - host: {{ nada_host }}
+        - host: cdnjs.cloudflare.com
+        - host: cdn.jsdelivr.net
   gcp:
     bigQueryDatasets:
       - name: rekrutteringsbistand_kandidat_api
